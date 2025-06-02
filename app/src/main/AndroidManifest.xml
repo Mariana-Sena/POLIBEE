@@ -10,14 +10,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Polibee"
+        android:theme="@style/Theme.Polibee_v2"
         tools:targetApi="31">
 
         <!-- SplashActivity como activity principal -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.Polibee">
+            android:theme="@style/Theme.Polibee_v2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,19 +28,63 @@
         <activity
             android:name=".WelcomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.Polibee" />
+            android:theme="@style/Theme.Polibee_v2" />
 
         <!-- LoginActivity -->
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.Polibee" />
+            android:theme="@style/Theme.Polibee_v2" />
+
+        <!-- CadastroActivity -->
+        <activity
+            android:name=".CadastroActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Polibee_v2" />
 
         <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Polibee" />
+            android:theme="@style/Theme.Polibee_v2" />
+
+        <activity android:name=".ForgotPasswordActivity" android:exported="false" />
+        <activity android:name=".VerifyEmailConfirmationActivity" android:exported="false" />
+        <activity android:name=".EnterCodeActivity" android:exported="false" />
+        <activity android:name=".ResetPasswordActivity" android:exported="false" />
+        <activity android:name=".PremiumPlansActivity" android:exported="false" />
+
+        <activity android:name=".CartActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".AluguelActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".MarketplaceActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".CertificacaoActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".HistoryActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".FavoritesActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".ProfileActivity" android:exported="false"
+            tools:ignore="Instantiatable" />
+
+        <activity android:name=".BusinessProfileActivity" android:exported="false" />
+        <activity android:name=".ChatActivity" android:exported="false" />
+
+        <activity android:name=".ProfileActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".MyDataActivity" android:exported="false" />
+        <activity android:name=".PrivacySecurityActivity" android:exported="false" />
+        <activity android:name=".MyCardsActivity" android:exported="false" />
+        <activity android:name=".RentOrSellActivity" android:exported="false" />
+        <activity android:name=".AccessibilityActivity" android:exported="false" />
+        <activity android:name=".PolibeeSupportActivity" android:exported="false" />
+
+        <activity android:name=".PremiumBenefitsActivity" android:exported="false" />
+        <activity android:name=".PremiumPlansActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".PaymentActivity" android:exported="false" />
 
     </application>
 </manifest>

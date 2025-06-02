@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    namespace = "com.example.polibee"
-    compileSdk = 34
+    namespace = "com.example.polibee_v2"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.polibee"
-        minSdk = 24  // Alterado para 24 conforme solicitado
+        applicationId = "com.example.polibee_v2"
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    // Use versões compatíveis
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -59,8 +59,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

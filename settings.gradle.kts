@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Polibee"
+rootProject.name = "Polibee_v2"
 include(":app")
+ 
