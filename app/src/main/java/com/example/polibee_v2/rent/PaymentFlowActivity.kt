@@ -1,41 +1,48 @@
-// src/main/java/com/example/polibee_v2/AluguelActivity.kt
-package com.example.polibee_v2
+// src/main/java/com/example/polibee_v2/PaymentFlowActivity.kt
+package com.example.polibee_v2.rent
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.Color
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.Image
-import androidx.compose.ui.draw.clip
-import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.text.style.TextAlign
-// Importe PolibeeDarkGreen, PolibeeOrange e montserratFamily
+import androidx.compose.ui.platform.LocalContext
+import com.example.polibee_v2.FavoritesActivity
+import com.example.polibee_v2.HistoryActivity
+import com.example.polibee_v2.MainActivity
+import com.example.polibee_v2.PaymentOptionButton
+import com.example.polibee_v2.PolibeeOrange
+import com.example.polibee_v2.PolibeeTopBarWithTitleAndBack
+import com.example.polibee_v2.ProfileActivity
+import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
-import com.example.polibee_v2.rent.ApicultureIntroActivity
+import com.example.polibee_v2.montserratFamily
 
-class AluguelActivity : ComponentActivity() {
+class PaymentFlowActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Polibee_v2Theme {
-                AluguelFlowStarterScreen(
-                    onStartClick = {
-                        startActivity(Intent(this, ApicultureIntroActivity::class.java))
-                    },
+                PaymentFlowScreen(
                     onBackClick = { finish() },
                     onBottomNavItemClick = { index ->
                         when (index) {
@@ -54,24 +61,26 @@ class AluguelActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AluguelFlowStarterScreen(
-    onStartClick: () -> Unit,
+fun PaymentFlowScreen(
     onBackClick: () -> Unit,
     onBottomNavItemClick: (Int) -> Unit
 ) {
-    var selectedBottomNavItem by remember { mutableStateOf(-1) } // Nenhum item selecionado por padrão
+    val context = LocalContext.current
+    var selectedBottomNavItem by remember { mutableStateOf(-1) }
 
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            PolibeeTopBarWithTitleAndBack(
-                title = "Aluguel de Colmeias",
-                onBackClick = onBackClick
-            )
+            PolibeeTopBarWithTitleAndBack(title = "Pagamento", onBackClick = onBackClick)
         },
         bottomBar = {
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
-            val icons = listOf(R.drawable.home, R.drawable.clock, R.drawable.heart, R.drawable.profile)
+            val icons = listOf(
+                R.drawable.home,
+                R.drawable.clock,
+                R.drawable.heart,
+                R.drawable.profile
+            )
             NavigationBar(
                 containerColor = PolibeeDarkGreen,
                 modifier = Modifier
@@ -121,36 +130,47 @@ fun AluguelFlowStarterScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
                 .background(Color.White),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Inicie sua jornada de aluguel de colmeias!",
-                fontFamily = montserratFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                color = PolibeeDarkGreen,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
             Spacer(modifier = Modifier.height(32.dp))
-            Button(
-                onClick = onStartClick,
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .height(50.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PolibeeOrange)
+            Text(
+                text = "Selecione o método de pagamento",
+                fontFamily = montserratFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                color = PolibeeDarkGreen,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text(
-                    "Começar",
-                    color = Color.White,
-                    fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                PaymentOptionButton(
+                    iconResId = R.drawable.bar_code, // Ícone de Boleto
+                    text = "Boleto",
+                    onClick = { Toast.makeText(context, "Boleto selecionado!", Toast.LENGTH_SHORT).show() }
+                )
+                PaymentOptionButton(
+                    iconResId = R.drawable.card, // Ícone de Cartão
+                    text = "Cartão",
+                    onClick = { Toast.makeText(context, "Cartão selecionado!", Toast.LENGTH_SHORT).show() }
+                )
+                PaymentOptionButton(
+                    iconResId = R.drawable.qrcode, // Ícone de QR Code
+                    text = "QR Code",
+                    onClick = { Toast.makeText(context, "QR Code selecionado!", Toast.LENGTH_SHORT).show() }
+                )
+                PaymentOptionButton(
+                    iconResId = R.drawable.pix, // Ícone de Pix
+                    text = "Pix",
+                    onClick = { Toast.makeText(context, "Pix selecionado!", Toast.LENGTH_SHORT).show() }
                 )
             }
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

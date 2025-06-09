@@ -26,19 +26,19 @@
 
         <!-- WelcomeActivity -->
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".access.WelcomeActivity"
             android:exported="false"
             android:theme="@style/Theme.Polibee_v2" />
 
         <!-- LoginActivity -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".access.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Polibee_v2" />
 
         <!-- CadastroActivity -->
         <activity
-            android:name=".CadastroActivity"
+            android:name=".access.CadastroActivity"
             android:exported="false"
             android:theme="@style/Theme.Polibee_v2" />
 
@@ -48,10 +48,10 @@
             android:exported="false"
             android:theme="@style/Theme.Polibee_v2" />
 
-        <activity android:name=".ForgotPasswordActivity" android:exported="false" />
-        <activity android:name=".VerifyEmailConfirmationActivity" android:exported="false" />
-        <activity android:name=".EnterCodeActivity" android:exported="false" />
-        <activity android:name=".ResetPasswordActivity" android:exported="false" />
+        <activity android:name=".access.ForgotPasswordActivity" android:exported="false" />
+        <activity android:name=".access.VerifyEmailConfirmationActivity" android:exported="false" />
+        <activity android:name=".access.EnterCodeActivity" android:exported="false" />
+        <activity android:name=".access.ResetPasswordActivity" android:exported="false" />
         <activity android:name=".PremiumPlansActivity" android:exported="false" />
 
         <activity android:name=".CartActivity" android:exported="false"
@@ -69,7 +69,6 @@
         <activity android:name=".ProfileActivity" android:exported="false"
             tools:ignore="Instantiatable" />
 
-        <activity android:name=".BusinessProfileActivity" android:exported="false" />
         <activity android:name=".ChatActivity" android:exported="false" />
 
         <activity android:name=".ProfileActivity" android:exported="false"
@@ -81,10 +80,32 @@
         <activity android:name=".AccessibilityActivity" android:exported="false" />
         <activity android:name=".PolibeeSupportActivity" android:exported="false" />
 
+        <!-- PODEM SER REMOVIDAS -->
         <activity android:name=".PremiumBenefitsActivity" android:exported="false" />
         <activity android:name=".PremiumPlansActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />
+
+        <!-- NOVA ATIVIDADE PREMIUM (substitui as anteriores) -->
+        <activity android:name=".PremiumOverviewActivity" android:exported="false" />
         <activity android:name=".PaymentActivity" android:exported="false" />
 
+        <activity android:name=".BeeCuriosityActivity" android:exported="false" />
+
+        <!-- **NOVAS ATIVIDADES DO FLUXO DE ALUGUEL (9 PÁGINAS)** -->
+        <activity android:name=".rent.ApicultureIntroActivity" android:exported="false" />
+        <activity android:name=".rent.TipsActivity" android:exported="false" />
+        <activity android:name=".rent.PropertyInfoActivity" android:exported="false" />
+        <activity android:name=".rent.RentalConfigActivity" android:exported="false" />
+        <activity android:name=".rent.CompanyListActivity" android:exported="false" />
+        <activity android:name=".rent.CompanyDetailsActivity" android:exported="false" />
+        <activity android:name=".rent.AvailabilityActivity" android:exported="false" />
+        <activity android:name=".rent.ConfirmationActivity" android:exported="false" />
+        <activity android:name=".rent.PaymentFlowActivity" android:exported="false" />
+
+        <!-- NOVAS ATIVIDADES DE HISTÓRICO E FAVORITOS -->
+        <activity android:name=".HistoryActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".FavoritesActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
     </application>
 </manifest>

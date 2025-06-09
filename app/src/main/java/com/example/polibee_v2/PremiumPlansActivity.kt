@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 
 class PremiumPlansActivity : ComponentActivity() {

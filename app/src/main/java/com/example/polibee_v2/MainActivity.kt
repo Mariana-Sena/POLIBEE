@@ -2,7 +2,6 @@ package com.example.polibee_v2
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcel
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -31,9 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import android.os.Parcelable // Certifique-se de que está importado
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize // Certifique-se de ter o plugin 'kotlin-parcelize' no seu build.gradle.kts
 
 // --- Cores e Fontes Comuns ---
+// As cores PolibeeOrange e PolibeeCategoryBtnBg e PolibeeIconColor
+// assumimos que estão sendo importadas corretamente ou definidas globalmente.
+// Ex: val PolibeeDarkGreen = Color(0xFF0D2016)
+// Se PolibeeDarkGreen vem de 'com.example.polibee_v2.access.PolibeeDarkGreen', mantenha o import.
+import com.example.polibee_v2.access.PolibeeDarkGreen
+
 val PolibeeOrange = Color(0xFFFFC107)
 val PolibeeCategoryBtnBg = Color(0xFFFFB304)
 val PolibeeIconColor = Color(0xFF101B15)
@@ -43,51 +49,14 @@ val montserratFamily = FontFamily(
     Font(R.font.montserrat_bold, FontWeight.Bold)
 )
 
-// Data class para item do carrossel (Parcelable para passar via Intent)
+// Data class para Abelhas Nativas (para a nova seção)
 @Parcelize
-data class OfferItem(
+data class NativeBee(
     val id: Int,
-    val imageResId: Int,
-    val companyName: String,
-    val location: String,
-    val rating: Float,
-    var isFavorite: Boolean
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readString().toString(),
-        parcel.readString().toString(),
-        parcel.readFloat(),
-        parcel.readByte() != 0.toByte()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
-        parcel.writeInt(imageResId)
-        parcel.writeString(companyName)
-        parcel.writeString(location)
-        parcel.writeFloat(rating)
-        parcel.writeByte(if (isFavorite) 1 else 0)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<OfferItem> {
-        override fun createFromParcel(parcel: Parcel): OfferItem {
-            return OfferItem(parcel)
-        }
-
-        override fun newArray(size: Int): Array<OfferItem?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
-annotation class Parcelize
+    val name: String,
+    val imageResId: Int, // Imagem para o card da abelha
+    val curiosityText: String // Texto das curiosidades para a página detalhe
+) : Parcelable
 
 // --- MainActivity ---
 class MainActivity : ComponentActivity() {
@@ -107,40 +76,32 @@ class MainActivity : ComponentActivity() {
 fun MainScreenContent() {
     val context = LocalContext.current
 
-    // Dados de exemplo para o carrossel de ofertas (estado mutável para o favorito)
-    val carouselItems = remember {
+    // Dados de exemplo para as Abelhas Nativas
+    val nativeBees = remember {
         mutableStateListOf(
-            OfferItem(
+            NativeBee(
                 id = 1,
-                imageResId = R.drawable.placeholder_image,
-                companyName = "MELIPROA",
-                location = "São Paulo - SP",
-                rating = 4.8f,
-                isFavorite = false
+                name = "Jataí",
+                imageResId = R.drawable.jatai, // Certifique-se que esta imagem existe
+                curiosityText = "A abelha Jataí (Tetragonisca angustula) é uma das abelhas sem ferrão mais comuns no Brasil. Pequenas e mansas, produzem um mel delicioso e são ótimas polinizadoras. São fáceis de criar em ambientes urbanos."
             ),
-            OfferItem(
+            NativeBee(
                 id = 2,
-                imageResId = R.drawable.placeholder_image,
-                companyName = "Jardim das Abelhas",
-                location = "Rio de Janeiro - RJ",
-                rating = 4.5f,
-                isFavorite = false
+                name = "Mandaguari",
+                imageResId = R.drawable.mandaguari, // Certifique-se que esta imagem existe
+                curiosityText = "A Mandaguari (Scaptotrigona postica) é uma abelha sem ferrão de porte médio, conhecida por seu comportamento mais defensivo. Produz um mel com sabor marcante e possui um invólucro de cera escura em seu ninho."
             ),
-            OfferItem(
+            NativeBee(
                 id = 3,
-                imageResId = R.drawable.placeholder_image,
-                companyName = "Doce Mel Colmeias",
-                location = "Belo Horizonte - MG",
-                rating = 4.9f,
-                isFavorite = false
+                name = "Uruçu",
+                imageResId = R.drawable.urucu, // Certifique-se que esta imagem existe
+                curiosityText = "A Uruçu (Melipona scutellaris) é uma abelha sem ferrão de grande porte, muito valorizada no nordeste do Brasil. Produz um mel de alta qualidade e sabor suave. Sua criação é importante para a conservação da espécie."
             ),
-            OfferItem(
+            NativeBee(
                 id = 4,
-                imageResId = R.drawable.placeholder_image,
-                companyName = "Apiário Central",
-                location = "Brasília - DF",
-                rating = 4.2f,
-                isFavorite = false
+                name = "Mandaçaia",
+                imageResId = R.drawable.mandacaia, // Certifique-se que esta imagem existe
+                curiosityText = "A Mandaçaia (Melipona quadrifasciata) é uma abelha sem ferrão robusta, famosa pela beleza de sua coloração e pela qualidade do mel. Possui uma mandíbula que lembra açaí, daí o nome."
             )
         )
     }
@@ -166,8 +127,8 @@ fun MainScreenContent() {
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .padding(start = 16.dp)
-                        .size(100.dp, 30.dp) // Ajuste o tamanho conforme sua imagem
-                        .clickable { context.startActivity(Intent(context, PremiumBenefitsActivity::class.java)) } // <-- ALTERADO AQUI
+                        .size(100.dp, 30.dp)
+                        .clickable { context.startActivity(Intent(context, PremiumOverviewActivity::class.java)) }
                 )
 
                 // Logo Polibee (centro)
@@ -187,15 +148,15 @@ fun MainScreenContent() {
                         .padding(end = 16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.sacola),
+                        painter = painterResource(id = R.drawable.sacola), // Certifique-se que esta imagem existe
                         contentDescription = "Carrinho",
                         modifier = Modifier.size(30.dp)
                     )
                 }
             }
         },
+
         bottomBar = {
-            // --- Barra de Navegação Inferior (Menu) - INTEGRADA AQUI ---
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
             val icons = listOf(
                 R.drawable.home,
@@ -204,53 +165,62 @@ fun MainScreenContent() {
                 R.drawable.profile
             )
 
-            NavigationBar(
-                containerColor = PolibeeDarkGreen, // Fundo verde escuro
+            // NOVO: Column para garantir que o fundo seja PolibeeDarkGreen até o final
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp) // Altura da barra
-                    .padding(horizontal = 16.dp, vertical = 8.dp) // Padding para o efeito "flutuante"
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) // Bordas superiores arredondadas
+                    .background(PolibeeDarkGreen) // AQUI: Garante que toda a área inferior é verde
+                    .navigationBarsPadding() // AQUI: Garante que o conteúdo não se sobreponha à barra de navegação do sistema
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) // <--- AQUI A MUDANÇA: APLIQUE O CLIP APENAS NO COLUMN EXTERNO
             ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedBottomNavItem == index,
-                        onClick = {
-                            selectedBottomNavItem = index
-                            // Lógica de navegação para as telas correspondentes
-                            when (index) {
-                                0 -> { /* Já está na Home */ }
-                                1 -> context.startActivity(Intent(context, HistoryActivity::class.java))
-                                2 -> context.startActivity(Intent(context, FavoritesActivity::class.java))
-                                3 -> context.startActivity(Intent(context, ProfileActivity::class.java))
-                            }
-                        },
-                        icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = painterResource(id = icons[index]),
-                                    contentDescription = item,
-                                    modifier = Modifier.size(24.dp), // Tamanho do ícone
-                                    colorFilter = ColorFilter.tint(Color.White) // Ícones sempre brancos
-                                )
-                                if (selectedBottomNavItem == index) {
-                                    Spacer(modifier = Modifier.height(4.dp)) // Espaço entre o ícone e o ponto
-                                    Box(
-                                        modifier = Modifier
-                                            .size(6.dp) // Tamanho do ponto
-                                            .clip(CircleShape)
-                                            .background(PolibeeOrange) // Ponto laranja quando selecionado
-                                    )
+                NavigationBar(
+                    containerColor = PolibeeDarkGreen, // Fundo verde escuro para a barra em si
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp) // Altura da barra
+                        .padding(horizontal = 16.dp) // Mantém o padding horizontal para o efeito flutuante
+                    // .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) REMOVIDO: Este clip AGORA DEVE SER REMOVIDO DAQUI
+                ) {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedBottomNavItem == index,
+                            onClick = {
+                                selectedBottomNavItem = index
+                                // Lógica de navegação para as telas correspondentes
+                                when (index) {
+                                    0 -> context.startActivity(Intent(context, MainActivity::class.java))
+                                    1 -> context.startActivity(Intent(context, HistoryActivity::class.java))
+                                    2 -> context.startActivity(Intent(context, FavoritesActivity::class.java))
+                                    3 -> context.startActivity(Intent(context, ProfileActivity::class.java))
                                 }
-                            }
-                        },
-                        label = null, // Sem texto para o label
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
-                            unselectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
-                            indicatorColor = Color.Transparent // Sem indicador padrão do Material Design
+                            },
+                            icon = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(id = icons[index]),
+                                        contentDescription = item,
+                                        modifier = Modifier.size(24.dp), // Tamanho do ícone
+                                        colorFilter = ColorFilter.tint(Color.White) // Ícones sempre brancos
+                                    )
+                                    if (selectedBottomNavItem == index) {
+                                        Spacer(modifier = Modifier.height(4.dp)) // Espaço entre o ícone e o ponto
+                                        Box(
+                                            modifier = Modifier
+                                                .size(6.dp) // Tamanho do ponto
+                                                .clip(CircleShape)
+                                                .background(PolibeeOrange) // Ponto laranja quando selecionado
+                                        )
+                                    }
+                                }
+                            },
+                            label = null, // Sem texto para o label
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
+                                unselectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
+                                indicatorColor = Color.Transparent // Sem indicador padrão do Material Design
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -303,7 +273,7 @@ fun MainScreenContent() {
                 CategoryButton(
                     iconResId = R.drawable.hive,
                     text = "Aluguel",
-                    onClick = { context.startActivity(Intent(context, AluguelActivity::class.java)) }
+                    onClick = { context.startActivity(Intent(context, AluguelActivity::class.java)) } // <-- ALTERADO: Agora AluguelActivity é o novo fluxo
                 )
                 CategoryButton(
                     iconResId = R.drawable.cesto,
@@ -317,10 +287,10 @@ fun MainScreenContent() {
                 )
             }
 
-            // Seção de Carrossel de Ofertas
+            // Seção de Abelhas Nativas
             Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Ofertas de Aluguéis de Colmeias",
+                text = "Conheça Nossas Abelhas Nativas", // Título da nova seção
                 fontFamily = montserratFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
@@ -333,12 +303,13 @@ fun MainScreenContent() {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
-                items(carouselItems) { item ->
-                    OfferCard(item = item) { clickedItem ->
-                        val index = carouselItems.indexOfFirst { it.id == clickedItem.id }
-                        if (index != -1) {
-                            carouselItems[index] = clickedItem.copy(isFavorite = !clickedItem.isFavorite)
+                items(nativeBees) { bee ->
+                    NativeBeeCard(bee = bee) { clickedBee ->
+                        // Navega para a tela de curiosidades da abelha
+                        val intent = Intent(context, BeeCuriosityActivity::class.java).apply {
+                            putExtra("nativeBee", clickedBee)
                         }
+                        context.startActivity(intent)
                     }
                 }
             }
@@ -348,7 +319,7 @@ fun MainScreenContent() {
     }
 }
 
-// --- Componente para os Botões de Categoria ---
+// --- Componente para os Botões de Categoria (mantido) ---
 @Composable
 fun CategoryButton(
     iconResId: Int,
@@ -384,97 +355,40 @@ fun CategoryButton(
     }
 }
 
-// --- Componente para o Cartão de Oferta no Carrossel ---
+// --- NOVO Componente para o Cartão de Abelha Nativa ---
 @Composable
-fun OfferCard(item: OfferItem, onFavoriteClick: (OfferItem) -> Unit) {
-    val context = LocalContext.current
-
+fun NativeBeeCard(bee: NativeBee, onClick: (NativeBee) -> Unit) {
     Card(
         modifier = Modifier
-            .width(200.dp)
-            .height(200.dp)
-            .clickable { // TORNA O CARTÃO CLICÁVEL
-                val intent = Intent(context, BusinessProfileActivity::class.java)
-                intent.putExtra("offerItem", item) // PASSA O OBJETO OFFERITEM PARA A NOVA ACTIVITY
-                context.startActivity(intent)
-            },
+            .width(180.dp) // Largura ajustada para o card da abelha
+            .height(160.dp) // Altura ajustada
+            .clickable { onClick(bee) },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Image(
-                painter = painterResource(id = item.imageResId),
-                contentDescription = "Imagem da Oferta",
-                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = bee.imageResId),
+                contentDescription = bee.name,
+                modifier = Modifier
+                    .size(80.dp) // Tamanho da imagem da abelha
+                    .clip(CircleShape), // Imagem circular
                 contentScale = ContentScale.Crop
             )
-
-            // Ícone de Coração para Favorito
-            IconButton(
-                onClick = { onFavoriteClick(item) },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(8.dp)
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.4f))
-            ) {
-                Image(
-                    painter = painterResource(
-                        id = if (item.isFavorite) R.drawable.heart_filled else R.drawable.heart
-                    ),
-                    contentDescription = "Favorito",
-                    modifier = Modifier.size(20.dp),
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
-            }
-
-            // Box com Informações da Empresa e Rating
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = item.companyName,
-                    fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    color = Color.White,
-                    maxLines = 1
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = item.location,
-                        fontFamily = montserratFamily,
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.8f),
-                        maxLines = 1
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            painter = painterResource(id = R.drawable.star),
-                            contentDescription = "Estrela de Avaliação",
-                            modifier = Modifier.size(12.dp),
-                            colorFilter = ColorFilter.tint(Color.Yellow)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = item.rating.toString(),
-                            fontFamily = montserratFamily,
-                            fontSize = 12.sp,
-                            color = Color.White
-                        )
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = bee.name,
+                fontFamily = montserratFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                color = PolibeeDarkGreen,
+                maxLines = 1
+            )
         }
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.polibee_v2.access.WelcomeActivity
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import kotlinx.coroutines.delay
 
@@ -56,7 +57,7 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(2000, easing = LinearEasing),
+            animation = tween(2500, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "rotate"
