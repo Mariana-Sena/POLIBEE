@@ -10,6 +10,16 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import com.example.polibee_v2.R // Importe R para acessar recursos de fontes
+import androidx.compose.ui.graphics.Color
+
+val montserratFamily = FontFamily(
+    Font(R.font.montserrat_regular, FontWeight.Normal), // Assumindo que você tem esses arquivos .ttf/.otf em res/font/
+    Font(R.font.montserrat_bold, FontWeight.Bold)
+)
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -32,6 +42,9 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
+val PolibeeDarkGreen = Color(0xFF2E7D32) // Exemplo de um verde escuro
+val PolibeeOrange = Color(0xFFFF9800) // Exemplo de um laranja
 
 @Composable
 fun Polibee_v2Theme(

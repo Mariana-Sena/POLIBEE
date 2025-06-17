@@ -19,15 +19,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import androidx.compose.foundation.shape.CircleShape
 import com.example.polibee_v2.access.PolibeeDarkGreen
+import com.example.polibee_v2.profile.ProfileActivity
 import com.example.polibee_v2.rent.CompanyDetailsActivity
 import com.example.polibee_v2.rent.CompanyListItem
 

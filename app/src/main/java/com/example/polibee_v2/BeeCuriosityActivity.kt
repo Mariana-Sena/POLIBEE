@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import com.example.polibee_v2.access.PolibeeDarkGreen // Exemplo de importação
+import com.example.polibee_v2.profile.ProfileActivity
+
 // val PolibeeOrange = Color(0xFFFFC107) // Se necessário
 
 class BeeCuriosityActivity : ComponentActivity() {

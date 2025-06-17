@@ -33,7 +33,7 @@ import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.PolibeeCategoryBtnBg
 import com.example.polibee_v2.PolibeeOrange
 import com.example.polibee_v2.PolibeeTopBarWithTitleAndBack
-import com.example.polibee_v2.ProfileActivity
+import com.example.polibee_v2.profile.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily

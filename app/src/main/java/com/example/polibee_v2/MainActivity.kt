@@ -39,6 +39,9 @@ import kotlinx.parcelize.Parcelize // Certifique-se de ter o plugin 'kotlin-parc
 // Ex: val PolibeeDarkGreen = Color(0xFF0D2016)
 // Se PolibeeDarkGreen vem de 'com.example.polibee_v2.access.PolibeeDarkGreen', mantenha o import.
 import com.example.polibee_v2.access.PolibeeDarkGreen
+import com.example.polibee_v2.marketplace.CartActivity
+import com.example.polibee_v2.marketplace.MarketplaceActivity
+import com.example.polibee_v2.profile.ProfileActivity
 
 val PolibeeOrange = Color(0xFFFFC107)
 val PolibeeCategoryBtnBg = Color(0xFFFFB304)
@@ -281,8 +284,8 @@ fun MainScreenContent() {
                     onClick = { context.startActivity(Intent(context, MarketplaceActivity::class.java)) }
                 )
                 CategoryButton(
-                    iconResId = R.drawable.check,
-                    text = "Certificação",
+                    iconResId = R.drawable.locarvender,
+                    text = "Locar ou Vender",
                     onClick = { context.startActivity(Intent(context, CertificacaoActivity::class.java)) }
                 )
             }

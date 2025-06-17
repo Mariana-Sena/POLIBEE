@@ -54,11 +54,11 @@
         <activity android:name=".access.ResetPasswordActivity" android:exported="false" />
         <activity android:name=".PremiumPlansActivity" android:exported="false" />
 
-        <activity android:name=".CartActivity" android:exported="false"
+        <activity android:name=".marketplace.CartActivity" android:exported="false"
             tools:ignore="Instantiatable" />
         <activity android:name=".AluguelActivity" android:exported="false"
             tools:ignore="Instantiatable" />
-        <activity android:name=".MarketplaceActivity" android:exported="false"
+        <activity android:name=".marketplace.MarketplaceActivity" android:exported="false"
             tools:ignore="Instantiatable" />
         <activity android:name=".CertificacaoActivity" android:exported="false"
             tools:ignore="Instantiatable" />
@@ -66,18 +66,18 @@
             tools:ignore="Instantiatable" />
         <activity android:name=".FavoritesActivity" android:exported="false"
             tools:ignore="Instantiatable" />
-        <activity android:name=".ProfileActivity" android:exported="false"
+        <activity android:name=".profile.ProfileActivity" android:exported="false"
             tools:ignore="Instantiatable" />
 
         <activity android:name=".ChatActivity" android:exported="false" />
 
-        <activity android:name=".ProfileActivity" android:exported="false"
+        <activity android:name=".profile.ProfileActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".MyDataActivity" android:exported="false" />
-        <activity android:name=".PrivacySecurityActivity" android:exported="false" />
-        <activity android:name=".MyCardsActivity" android:exported="false" />
+        <activity android:name=".profile.PrivacySecurityActivity" android:exported="false" />
+        <activity android:name=".profile.MyCardsActivity" android:exported="false" />
         <activity android:name=".RentOrSellActivity" android:exported="false" />
-        <activity android:name=".AccessibilityActivity" android:exported="false" />
+        <activity android:name=".profile.AccessibilityActivity" android:exported="false" />
         <activity android:name=".PolibeeSupportActivity" android:exported="false" />
 
         <!-- PODEM SER REMOVIDAS -->
@@ -104,6 +104,19 @@
 
         <!-- NOVAS ATIVIDADES DE HISTÓRICO E FAVORITOS -->
         <activity android:name=".HistoryActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
+        <activity android:name=".FavoritesActivity" android:exported="false"
+            tools:ignore="DuplicateActivity" />
+
+        <!-- NOVA ATIVIDADE DO MARKETPLACE -->
+        <activity android:name=".marketplace.ProductDetailsActivity" android:exported="false" />
+
+        <!-- As atividades abaixo já estão no seu manifest, apenas para referência -->
+        <activity android:name=".marketplace.MarketplaceActivity" android:exported="false"
+            tools:ignore="DuplicateActivity,Instantiatable" />
+        <activity android:name=".marketplace.CartActivity" android:exported="false"
+            tools:ignore="DuplicateActivity,Instantiatable,MissingClass" />
+        <activity android:name=".PaymentActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />
         <activity android:name=".FavoritesActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />

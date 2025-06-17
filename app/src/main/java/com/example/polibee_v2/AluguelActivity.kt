@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 // Importe PolibeeDarkGreen, PolibeeOrange e montserratFamily
 import com.example.polibee_v2.access.PolibeeDarkGreen
+import com.example.polibee_v2.profile.ProfileActivity
 import com.example.polibee_v2.rent.ApicultureIntroActivity
 
 class AluguelActivity : ComponentActivity() {
