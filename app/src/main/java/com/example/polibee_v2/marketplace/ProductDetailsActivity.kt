@@ -38,7 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.polibee_v2.PaymentActivity // Certifique-se que esta importação está correta
+import com.example.polibee_v2.premium.PaymentActivity // Certifique-se que esta importação está correta
 import com.example.polibee_v2.R
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import com.example.polibee_v2.ui.theme.PolibeeDarkGreen // Verifique se estas cores estão definidas

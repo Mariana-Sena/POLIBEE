@@ -26,13 +26,13 @@ import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.platform.LocalContext
-import com.example.polibee_v2.FavoritesActivity
-import com.example.polibee_v2.HistoryActivity
+import com.example.polibee_v2.nav.FavoritesActivity
+import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.MainActivity
-import com.example.polibee_v2.PaymentOptionButton
+import com.example.polibee_v2.premium.PaymentOptionButton
 import com.example.polibee_v2.PolibeeOrange
 import com.example.polibee_v2.PolibeeTopBarWithTitleAndBack
-import com.example.polibee_v2.profile.ProfileActivity
+import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily

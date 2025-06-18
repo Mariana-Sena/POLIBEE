@@ -31,11 +31,11 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.polibee_v2.AppDataSource
 import com.example.polibee_v2.ChatActivity
 import com.example.polibee_v2.Company
-import com.example.polibee_v2.FavoritesActivity
-import com.example.polibee_v2.HistoryActivity
+import com.example.polibee_v2.nav.FavoritesActivity
+import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.PolibeeOrange
-import com.example.polibee_v2.profile.ProfileActivity
+import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily
