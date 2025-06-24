@@ -56,7 +56,7 @@
 
         <activity android:name=".marketplace.CartActivity" android:exported="false"
             tools:ignore="Instantiatable" />
-        <activity android:name=".AluguelActivity" android:exported="false"
+        <activity android:name=".rent.AluguelActivity" android:exported="false"
             tools:ignore="Instantiatable" />
         <activity android:name=".marketplace.MarketplaceActivity" android:exported="false"
             tools:ignore="Instantiatable" />
@@ -69,11 +69,11 @@
         <activity android:name=".nav.ProfileActivity" android:exported="false"
             tools:ignore="Instantiatable" />
 
-        <activity android:name=".ChatActivity" android:exported="false" />
+        <activity android:name=".rent.ChatActivity" android:exported="false" />
 
         <activity android:name=".nav.ProfileActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />
-        <activity android:name=".MyDataActivity" android:exported="false" />
+        <activity android:name=".profile.MyDataActivity" android:exported="false" />
         <activity android:name=".profile.PrivacySecurityActivity" android:exported="false" />
         <activity android:name=".profile.MyCardsActivity" android:exported="false" />
         <activity android:name=".RentOrSellActivity" android:exported="false" />
@@ -120,5 +120,9 @@
             tools:ignore="DuplicateActivity" />
         <activity android:name=".nav.FavoritesActivity" android:exported="false"
             tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".marketplace.PaymentActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

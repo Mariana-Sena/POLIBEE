@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/PremiumOverviewActivity.kt
 package com.example.polibee_v2.premium
 
 import android.content.Intent
@@ -23,20 +22,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.polibee_v2.nav.FavoritesActivity
 import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.PolibeeOrange
 import com.example.polibee_v2.R
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import com.example.polibee_v2.access.PolibeeDarkGreen // Verifique se este import está correto
+import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily
 import com.example.polibee_v2.nav.ProfileActivity
 
@@ -55,14 +52,13 @@ class PremiumOverviewActivity : ComponentActivity() {
                         startActivity(intent)
                     },
                     onBottomNavItemClick = { index ->
-                        // Lógica de navegação do menu inferior (igual às outras Activities)
                         when (index) {
                             0 -> startActivity(Intent(this, MainActivity::class.java))
                             1 -> startActivity(Intent(this, HistoryActivity::class.java))
                             2 -> startActivity(Intent(this, FavoritesActivity::class.java))
                             3 -> startActivity(Intent(this, ProfileActivity::class.java))
                         }
-                        finish() // Finaliza esta activity se navegar para outra tela principal
+                        finish()
                     }
                 )
             }
@@ -80,73 +76,111 @@ fun PremiumOverviewScreen(
     var selectedBottomNavItem by remember { mutableStateOf(-1) }
 
     Scaffold(
-        containerColor = Color.Transparent, // Fundo transparente para o Scaffold
+        containerColor = PolibeeDarkGreen,
         topBar = {
-            // --- Custom TopBar conforme o protótipo: Logo POLIBEE e "MELHOR PREÇO" ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp) // Altura expandida para abrigar a logo e badge
-                    .background(PolibeeDarkGreen) // Cor de fundo da barra superior
-                    .clip(RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)) // Cantos inferiores arredondados
+                    .height(300.dp) // Altura expandida para abrigar a logo e os cards de preço
+                    .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
+                    .background(PolibeeDarkGreen)
             ) {
-                // Botão de Voltar (canto superior esquerdo)
                 IconButton(
                     onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.TopStart).padding(start = 16.dp, top = 24.dp)
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(start = 16.dp, top = 24.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.seta_voltar), // Certifique-se que 'seta_voltar' existe
+                        painter = painterResource(id = R.drawable.seta_voltar),
                         contentDescription = "Voltar",
                         modifier = Modifier.size(30.dp),
-                        colorFilter = ColorFilter.tint(Color.White) // Seta branca
+                        colorFilter = ColorFilter.tint(Color.White)
                     )
                 }
 
-                // Logo POLIBEE (texto com cores diferentes e ícone) centralizada
-                Row(
-                    modifier = Modifier.align(Alignment.Center).padding(top = 24.dp), // Ajuste o padding superior para centralizar melhor a Row
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_pollinate), // Certifique-se que 'polibee_icon' (a abelha) existe
-                        contentDescription = "Polibee Logo",
-                        modifier = Modifier.size(50.dp) // Ajuste o tamanho do ícone
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = buildAnnotatedString {
-                            withStyle(style = SpanStyle(color = PolibeeOrange)) { append("POLI") }
-                            withStyle(style = SpanStyle(color = Color.White)) { append("BEE") }
-                        },
-                        fontFamily = montserratFamily,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 36.sp // Fonte maior para a logo
-                    )
-                }
-
-                // Badge "MELHOR PREÇO" (canto superior direito)
-                Box(
+                Column(
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 24.dp, end = 16.dp)
-                        .clip(RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)) // Forma do badge
-                        .background(PolibeeOrange)
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                        .fillMaxSize()
+                        .padding(top = 5.dp, bottom = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(modifier = Modifier.height(5.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.logo_pollinate),
+                            contentDescription = "Polibee Logo",
+                            modifier = Modifier.size(100.dp)
+                        )
+                        Spacer(modifier = Modifier.width(0.dp))
+                    }
                     Text(
-                        text = "MELHOR PREÇO",
+                        text = "Selecione uma opção:",
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                        color = Color.White
+                        fontSize = 10.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 0.dp),
+                        textAlign = TextAlign.Center
                     )
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Seção de Preços (Cards Mensal e Anual)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp), // Padding lateral para os cards
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Card Mensal
+                        PremiumPlanCard(
+                            planType = "Mensal",
+                            price = "R$ 34,90",
+                            isAnnual = false,
+                            onClick = { onSelectPlan("Mensal") }
+                        )
+
+                        // Card Anual com Badge "MELHOR PREÇO" acima dele
+                        Box(
+                            contentAlignment = Alignment.TopCenter,
+                            modifier = Modifier.weight(1f) // Garante que o Box ocupe seu espaço na Row
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .offset(y = (-15).dp)
+                                    .clip(RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp))
+                                    .background(PolibeeOrange)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .zIndex(1f)
+                            ) {
+                                Text(
+                                    text = "MELHOR PREÇO",
+                                    fontFamily = montserratFamily,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp,
+                                    color = Color.White
+                                )
+                            }
+                            PremiumPlanCard(
+                                planType = "Anual",
+                                price = "R$ 26,66",
+                                totalPrice = "R$ 320,00 no ano",
+                                isAnnual = true,
+                                onClick = { onSelectPlan("Anual") }
+                            )
+                        }
+                    }
                 }
             }
         },
         bottomBar = {
-            // --- Barra de Navegação Inferior (Menu) ---
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
             val icons = listOf(
                 R.drawable.home,
@@ -154,47 +188,53 @@ fun PremiumOverviewScreen(
                 R.drawable.heart,
                 R.drawable.profile
             )
-            NavigationBar(
-                containerColor = PolibeeDarkGreen,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .navigationBarsPadding()
             ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedBottomNavItem == index,
-                        onClick = {
-                            selectedBottomNavItem = index
-                            onBottomNavItemClick(index)
-                        },
-                        icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = painterResource(id = icons[index]),
-                                    contentDescription = item,
-                                    modifier = Modifier.size(24.dp),
-                                    colorFilter = ColorFilter.tint(Color.White)
-                                )
-                                if (selectedBottomNavItem == index) {
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(6.dp)
-                                            .clip(CircleShape)
-                                            .background(PolibeeOrange)
+                NavigationBar(
+                    containerColor = PolibeeDarkGreen,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(horizontal = 0.dp)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                ) {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedBottomNavItem == index,
+                            onClick = {
+                                selectedBottomNavItem = index
+                                onBottomNavItemClick(index)
+                            },
+                            icon = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(id = icons[index]),
+                                        contentDescription = item,
+                                        modifier = Modifier.size(24.dp),
+                                        colorFilter = ColorFilter.tint(Color.White)
                                     )
+                                    if (selectedBottomNavItem == index) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(6.dp)
+                                                .clip(CircleShape)
+                                                .background(PolibeeOrange)
+                                        )
+                                    }
                                 }
-                            }
-                        },
-                        label = null,
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Unspecified,
-                            unselectedIconColor = Color.Unspecified,
-                            indicatorColor = Color.Transparent
+                            },
+                            label = null,
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color.Unspecified,
+                                unselectedIconColor = Color.Unspecified,
+                                indicatorColor = Color.Transparent
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -202,122 +242,72 @@ fun PremiumOverviewScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .background(Color.White) // Fundo branco para o conteúdo principal
+                .background(Color.White)
         ) {
-            // Favos Laterais (background decorativo)
             Image(
-                painter = painterResource(id = R.drawable.favo), // Certifique-se que 'honeycomb_left' existe
-                contentDescription = "Decorativo",
+                painter = painterResource(id = R.drawable.favo),
+                contentDescription = "Decorativo Esquerdo",
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .offset(x = (-80).dp) // Deslocamento para fora da tela, ajuste conforme sua imagem
-                    .size(200.dp, 300.dp), // Tamanho da imagem, ajuste conforme sua imagem
-                contentScale = ContentScale.Fit
-            )
-            Image(
-                painter = painterResource(id = R.drawable.favo_direito), // Certifique-se que 'honeycomb_right' existe
-                contentDescription = "Decorativo",
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .offset(x = 80.dp) // Deslocamento para fora da tela, ajuste conforme sua imagem
-                    .size(200.dp, 300.dp), // Tamanho da imagem, ajuste conforme sua imagem
-                contentScale = ContentScale.Fit
+                    .align(Alignment.BottomStart)
+                    .offset(x = (-60).dp, y = 60.dp)
+                    .size(400.dp, 350.dp)
+                    .zIndex(-1f),
+                contentScale = ContentScale.FillBounds
             )
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(16.dp)) // Espaçamento abaixo da topBar customizada
+                Spacer(modifier = Modifier.height(16.dp))
 
-                // Seção de Preços (Cards Mensal e Anual)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp), // Padding lateral para os cards
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Card Mensal
-                    PremiumPlanCard(
-                        planType = "Mensal",
-                        price = "R$ 34,90",
-                        isAnnual = false,
-                        onClick = { onSelectPlan("Mensal") }
-                    )
-                    // Card Anual (com badge de melhor preço e borda laranja)
-                    PremiumPlanCard(
-                        planType = "Anual",
-                        price = "R$ 26,66",
-                        totalPrice = "Total R$ 320,00 no ano", // Texto adicional para o plano anual
-                        isAnnual = true,
-                        onClick = { onSelectPlan("Anual") }
-                    )
-                }
-
-                // Seção de Benefícios do Plano Premium
-                Spacer(modifier = Modifier.height(32.dp))
                 Text(
-                    text = "Benefícios do Plano Premium",
+                    text = "Benefícios do Abelha Rainha",
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     color = PolibeeDarkGreen,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp)
+                        .padding(horizontal = 37.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp) // Espaçamento entre os tópicos
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    BenefitRow(text = "Acesso prioritário a novas áreas de locação de colmeias")
-                    BenefitRow(text = "Descontos exclusivos em produtos apícolas da nossa loja")
-                    BenefitRow(text = "Consultoria especializada para otimização da produção de mel")
-                    BenefitRow(text = "Relatórios detalhados de saúde das colmeias e visitas programadas")
-                    BenefitRow(text = "Suporte 24/7 para emergências e dúvidas")
-                    BenefitRow(text = "Participação em workshops e eventos exclusivos para membros premium")
+                    BenefitRow(text = "Selo \"Parceiro Abelha Rainha\" para credibilidade")
+                    BenefitRow(text = "5% de taxa em aluguéis e vendas")
+                    BenefitRow(text = "Cobertura para perdas de enxames")
+                    BenefitRow(text = "Garantia de satisfação de polinização (ou crédito para próxima temporada)")
+                    BenefitRow(text = "1 frete grátis por mês para transporte de colmeias ")
+                    BenefitRow(text = "Agricultores: parcelamento em até 10x sem juros; melipolicultores: Saque sem taxas")
+                    BenefitRow(text = "Cursos curtos sobre:\n" +
+                            "- Melhores práticas apícolas;\n" +
+                            "- Aumento de produtividade agrícola, dentre outros.")
+                    BenefitRow(text = "Grupo fechado com especialistas\n" +
+                            "- Eventos trimestrais online;\n" +
+                            "- Acesso a Comunidade no WhatsApp.")
+                    BenefitRow(text = "Certificado digital de impacto ambiental.")
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Botão "Seja Premium"
-                Button(
-                    onClick = { onSelectPlan("Indefinido") }, // Você pode ajustar isso para um plano padrão ou forçar a seleção nos cards
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(horizontal = 24.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = PolibeeOrange)
-                ) {
-                    Text(
-                        "Seja Premium",
-                        color = Color.White,
-                        fontFamily = montserratFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp)) // Espaço para o rodapé
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
 }
 
-// Composable para os Cards de Plano Premium (Mensal/Anual)
 @Composable
 fun PremiumPlanCard(
     planType: String, // "Mensal" ou "Anual"
     price: String, // "R$ 34,90"
-    totalPrice: String = "", // "Total R$ 320,00 no ano" (apenas para Anual)
-    isAnnual: Boolean, // Booleano para aplicar a borda laranja e o badge
+    totalPrice: String = "", // "R$ 320,00 no ano" (apenas para Anual)
+    isAnnual: Boolean, // Booleano para aplicar a borda laranja
     onClick: () -> Unit
 ) {
     Card(
@@ -343,13 +333,13 @@ fun PremiumPlanCard(
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = PolibeeDarkGreen // Cor do texto "Mensal"/"Anual"
+                    color = PolibeeDarkGreen
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = price + "/Mês", // Adiciona "/Mês" ao preço
                     fontFamily = montserratFamily,
-                    fontWeight = FontWeight.ExtraBold, // Mais negrito para o preço
+                    fontWeight = FontWeight.ExtraBold,
                     fontSize = 24.sp, // Tamanho maior para o preço
                     color = PolibeeOrange, // Cor laranja para o preço
                     textAlign = TextAlign.Center
@@ -360,26 +350,7 @@ fun PremiumPlanCard(
                         text = totalPrice,
                         fontFamily = montserratFamily,
                         fontSize = 12.sp,
-                        color = Color.Gray // Cor cinza para o total
-                    )
-                }
-            }
-            if (isAnnual) {
-                // Badge "MELHOR PREÇO" posicionado no canto superior direito do card, saindo um pouco para fora
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 10.dp, y = (-10).dp) // Deslocamento para fora do card, ajuste conforme o protótipo
-                        .clip(RoundedCornerShape(bottomStart = 8.dp, topEnd = 8.dp)) // Forma do badge
-                        .background(PolibeeOrange) // Fundo laranja do badge
-                        .padding(horizontal = 8.dp, vertical = 4.dp) // Padding interno do badge
-                ) {
-                    Text(
-                        text = "MELHOR PREÇO",
-                        fontFamily = montserratFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 10.sp,
-                        color = Color.White // Texto branco do badge
+                        color = Color.Gray
                     )
                 }
             }
@@ -387,22 +358,21 @@ fun PremiumPlanCard(
     }
 }
 
-// Composable para cada linha de benefício com ícone
 @Composable
 fun BenefitRow(text: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            painter = painterResource(id = R.drawable.check_mark), // Certifique-se que 'check_mark' existe
+            painter = painterResource(id = R.drawable.check_mark),
             contentDescription = "Check Mark",
-            modifier = Modifier.size(24.dp), // Tamanho do ícone de check
-            colorFilter = ColorFilter.tint(PolibeeOrange) // Cor laranja para o ícone
+            modifier = Modifier.size(24.dp),
+            colorFilter = ColorFilter.tint(PolibeeOrange)
         )
-        Spacer(modifier = Modifier.width(16.dp)) // Espaçamento entre ícone e texto
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
             fontFamily = montserratFamily,
             fontSize = 16.sp,
-            color = PolibeeDarkGreen // Cor do texto do benefício
+            color = PolibeeDarkGreen
         )
     }
 }

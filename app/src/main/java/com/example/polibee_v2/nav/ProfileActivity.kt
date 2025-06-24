@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/ProfileActivity.kt
 package com.example.polibee_v2.nav
 
 import android.content.Intent
@@ -30,12 +29,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.MainActivity
-import com.example.polibee_v2.MyDataActivity
+import com.example.polibee_v2.profile.MyDataActivity
 import com.example.polibee_v2.PolibeeOrange
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.access.WelcomeActivity
-import com.example.polibee_v2.profile.AccessibilityActivity
+import com.example.polibee_v2.profile.AcessibilityActivity
 import com.example.polibee_v2.profile.MyCardsActivity
 import com.example.polibee_v2.profile.PolibeeSupportActivity
 import com.example.polibee_v2.profile.PrivacySecurityActivity
@@ -48,9 +47,8 @@ class ProfileActivity : ComponentActivity() {
         setContent {
             Polibee_v2Theme {
                 ProfileScreen(
-                    onBackClick = { finish() }, // Volta para a tela anterior
+                    onBackClick = { finish() },
                     onBottomNavItemClick = { index ->
-                        // Lógica de navegação do menu inferior (igual à MainActivity)
                         when (index) {
                             0 -> startActivity(Intent(this, MainActivity::class.java))
                             1 -> startActivity(Intent(this, HistoryActivity::class.java))
@@ -78,12 +76,11 @@ fun ProfileScreen(
         Font(R.font.montserrat_bold, FontWeight.Bold)
     )
 
-    var selectedBottomNavItem by remember { mutableStateOf(3) } // Perfil selecionado por padrão
+    var selectedBottomNavItem by remember { mutableStateOf(3) }
 
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            // TopBar Customizada com Botão de Voltar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,7 +100,6 @@ fun ProfileScreen(
             }
         },
         bottomBar = {
-            // --- Barra de Navegação Inferior (Menu) - INTEGRADA AQUI ---
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
             val icons = listOf(
                 R.drawable.home,
@@ -117,7 +113,6 @@ fun ProfileScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
                     .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
             ) {
                 items.forEachIndexed { index, item ->
@@ -167,7 +162,6 @@ fun ProfileScreen(
         ) {
             Spacer(modifier = Modifier.height(24.dp)) // Espaço abaixo da TopBar
 
-            // Seção de Foto e Nome do Usuário
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,68 +169,66 @@ fun ProfileScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.placeholder_image), // Foto do usuário
+                    painter = painterResource(id = R.drawable.placeholder_image),
                     contentDescription = "Foto do Usuário",
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape)
-                        .background(Color.Gray), // Fundo para a bolinha
+                        .background(Color.Gray),
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "Gabriel Lindo", // Nome do Usuário
+                    text = "Gabriel Lindo",
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = PolibeeDarkGreen
                 )
             }
-
             Spacer(modifier = Modifier.height(30.dp))
 
-            // Bloco do Menu de Opções
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = PolibeeDarkGreen) // Fundo verde escuro
+                colors = CardDefaults.cardColors(containerColor = PolibeeDarkGreen)
             ) {
                 Column(modifier = Modifier.padding(vertical = 16.dp)) {
                     ProfileMenuItem(
-                        iconResId = R.drawable.privacysecurity, // Ícone de Privacidade & Segurança
+                        iconResId = R.drawable.privacysecurity,
                         text = "Privacidade & Segurança",
                         onClick = { context.startActivity(Intent(context, PrivacySecurityActivity::class.java)) }
                     )
                     ProfileMenuItem(
-                        iconResId = R.drawable.mydata, // Ícone de Meus Dados
+                        iconResId = R.drawable.mydata,
                         text = "Meus Dados",
                         onClick = { context.startActivity(Intent(context, MyDataActivity::class.java)) }
                     )
                     ProfileMenuItem(
-                        iconResId = R.drawable.mycards, // Ícone de Meus Cartões
+                        iconResId = R.drawable.mycards,
                         text = "Meus Cartões",
                         onClick = { context.startActivity(Intent(context, MyCardsActivity::class.java)) }
                     )
                     ProfileMenuItem(
-                        iconResId = R.drawable.rentorsell, // Ícone de Locar ou Vender
+                        iconResId = R.drawable.rentorsell,
                         text = "Locar ou Vender",
                         onClick = { context.startActivity(Intent(context, ApicultureIntroActivity::class.java)) }
                     )
                     ProfileMenuItem(
-                        iconResId = R.drawable.accessibility, // Ícone de Acessibilidade
+                        iconResId = R.drawable.accessibility,
                         text = "Acessibilidade",
-                        onClick = { context.startActivity(Intent(context, AccessibilityActivity::class.java)) }
+                        onClick = { context.startActivity(Intent(context, AcessibilityActivity::class.java)) }
                     )
                     ProfileMenuItem(
-                        iconResId = R.drawable.polibeesupport, // Ícone de Suporte POLIBEE
+                        iconResId = R.drawable.polibeesupport,
                         text = "Suporte POLIBEE",
                         onClick = { context.startActivity(Intent(context, PolibeeSupportActivity::class.java)) }
                     )
                     // Botão Sair da Conta (Logout)
                     ProfileMenuItem(
-                        iconResId = R.drawable.logout, // Ícone de Sair da Conta
+                        iconResId = R.drawable.logout,
                         text = "Sair da Conta",
                         onClick = {
                             Toast.makeText(context, "Saindo da conta...", Toast.LENGTH_SHORT).show()
@@ -245,12 +237,11 @@ fun ProfileScreen(
                                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                             }
                             context.startActivity(intent)
-                            // Não precisa do finish() aqui, pois o flag já limpa a pilha.
                         }
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(30.dp)) // Espaçamento para o final da tela
+            Spacer(modifier = Modifier.height(30.dp))
         }
     }
 }
@@ -274,14 +265,14 @@ fun ProfileMenuItem(iconResId: Int, text: String, onClick: () -> Unit) {
                 painter = painterResource(id = iconResId),
                 contentDescription = text,
                 modifier = Modifier.size(24.dp),
-                colorFilter = ColorFilter.tint(PolibeeOrange) // Ícones em amarelo
+                colorFilter = ColorFilter.tint(PolibeeOrange)
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = text,
                 fontFamily = montserratFamily,
                 fontSize = 16.sp,
-                color = PolibeeOrange // Texto em amarelo
+                color = PolibeeOrange
             )
         }
     }

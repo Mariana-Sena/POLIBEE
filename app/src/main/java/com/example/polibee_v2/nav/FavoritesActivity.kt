@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/FavoritesActivity.kt
 package com.example.polibee_v2.nav
 
 import android.content.Intent
@@ -70,7 +69,7 @@ fun FavoritesScreen(
     onCompanyClick: (Company) -> Unit,
     onBottomNavItemClick: (Int) -> Unit
 ) {
-    var selectedBottomNavItem by remember { mutableStateOf(2) } // Favoritos selecionado por padrão
+    var selectedBottomNavItem by remember { mutableStateOf(2) }
 
     // Filtra a lista de todas as empresas para obter apenas as favoritas
     val favoriteCompanies = remember(AppDataSource.allCompanies) {
@@ -93,15 +92,13 @@ fun FavoritesScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PolibeeDarkGreen)
-                    .navigationBarsPadding()
+                    .navigationBarsPadding() // Empurra o conteúdo acima da barra de navegação do sistema
             ) {
                 NavigationBar(
                     containerColor = PolibeeDarkGreen,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .padding(horizontal = 16.dp)
                         .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                 ) {
                     items.forEachIndexed { index, item ->

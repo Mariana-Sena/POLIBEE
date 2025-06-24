@@ -78,9 +78,8 @@ fun EnterCodeScreen(
                 .padding(horizontal = 30.dp)
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(140.dp))
 
             Text(
                 text = "Digite o Código",
@@ -110,7 +109,7 @@ fun EnterCodeScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Para simplificar, vou usar um único TextField e limitá-lo a 6 dígitos
+                // Para simplificar, usar um único TextField e limitá-lo a 6 dígitos
                 // Uma implementação mais complexa teria 6 TextFields individuais
                 OutlinedTextField(
                     value = code,
@@ -133,6 +132,7 @@ fun EnterCodeScreen(
                         focusedBorderColor = PolibeeDarkGreen,
                         unfocusedBorderColor = PolibeeDarkGreen,
                         cursorColor = PolibeeDarkGreen,
+                        focusedTextColor = PolibeeDarkGreen
                     )
                 )
             }
@@ -151,14 +151,14 @@ fun EnterCodeScreen(
             ) {
                 Text(
                     "Continuar",
-                    color = Color.White,
+                    color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             Text(
                 text = "Não recebeu o código? Reenviar",

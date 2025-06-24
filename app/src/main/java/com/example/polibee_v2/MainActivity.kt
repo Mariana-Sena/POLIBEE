@@ -24,20 +24,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize // Certifique-se de ter o plugin 'kotlin-parcelize' no seu build.gradle.kts
+import kotlinx.parcelize.Parcelize
 
-// --- Cores e Fontes Comuns ---
-// As cores PolibeeOrange e PolibeeCategoryBtnBg e PolibeeIconColor
-// assumimos que estão sendo importadas corretamente ou definidas globalmente.
-// Ex: val PolibeeDarkGreen = Color(0xFF0D2016)
-// Se PolibeeDarkGreen vem de 'com.example.polibee_v2.access.PolibeeDarkGreen', mantenha o import.
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.marketplace.CartActivity
 import com.example.polibee_v2.marketplace.MarketplaceActivity
@@ -45,27 +39,21 @@ import com.example.polibee_v2.nav.FavoritesActivity
 import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.premium.PremiumOverviewActivity
 import com.example.polibee_v2.nav.ProfileActivity
+import com.example.polibee_v2.rent.AluguelActivity
 import com.example.polibee_v2.rent.ApicultureIntroActivity
 
 val PolibeeOrange = Color(0xFFFFC107)
 val PolibeeCategoryBtnBg = Color(0xFFFFB304)
 val PolibeeIconColor = Color(0xFF101B15)
 
-val montserratFamily = FontFamily(
-    Font(R.font.montserrat_regular),
-    Font(R.font.montserrat_bold, FontWeight.Bold)
-)
-
-// Data class para Abelhas Nativas (para a nova seção)
 @Parcelize
 data class NativeBee(
     val id: Int,
     val name: String,
-    val imageResId: Int, // Imagem para o card da abelha
-    val curiosityText: String // Texto das curiosidades para a página detalhe
+    val imageResId: Int,
+    val curiosityText: String
 ) : Parcelable
 
-// --- MainActivity ---
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,77 +65,84 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// --- MainScreenContent Composable ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContent() {
     val context = LocalContext.current
 
-    // Dados de exemplo para as Abelhas Nativas
     val nativeBees = remember {
         mutableStateListOf(
             NativeBee(
                 id = 1,
-                name = "Jataí",
-                imageResId = R.drawable.jatai, // Certifique-se que esta imagem existe
-                curiosityText = "A abelha Jataí (Tetragonisca angustula) é uma das abelhas sem ferrão mais comuns no Brasil. Pequenas e mansas, produzem um mel delicioso e são ótimas polinizadoras. São fáceis de criar em ambientes urbanos."
+                name = "Uruçu",
+                imageResId = R.drawable.urucu,
+                curiosityText = "A abelha Uruçu é uma polinizadora natural que melhora a produção de várias culturas agrícolas. \n" +
+                        "Ao visitar flor por flor, ela espalha o pólen, o que aumenta a quantidade e a qualidade dos frutos.\n" +
+                        "Ela é ideal para a polinização de:\n" +
+                        "\n" +
+                        "\uD83C\uDF53 Morango\n" +
+                        "\uD83C\uDF48 Melão e melancia\n" +
+                        "\uD83E\uDD6D Manga\n" +
+                        "\uD83C\uDF4A Cítricos (laranja, limão, tangerina)\n" +
+                        "\uD83E\uDD51 Abacate\n" +
+                        "\uD83C\uDF36\uFE0F Pimentão e pimenta\n" +
+                        "\uD83C\uDF3D Milho verde (em sistemas agroflorestais)\n" +
+                        "\n" +
+                        "Com a Uruçu, os frutos ficam mais bem formados, \n" +
+                        "maiores e com menos perda. \n" +
+                        "Além disso, como é uma abelha sem ferrão e nativa, \n" +
+                        "ela se adapta bem ao ambiente e trabalha em harmonia com a natureza.."
             ),
             NativeBee(
                 id = 2,
                 name = "Mandaguari",
-                imageResId = R.drawable.mandaguari, // Certifique-se que esta imagem existe
+                imageResId = R.drawable.mandaguari,
                 curiosityText = "A Mandaguari (Scaptotrigona postica) é uma abelha sem ferrão de porte médio, conhecida por seu comportamento mais defensivo. Produz um mel com sabor marcante e possui um invólucro de cera escura em seu ninho."
             ),
             NativeBee(
                 id = 3,
-                name = "Uruçu",
-                imageResId = R.drawable.urucu, // Certifique-se que esta imagem existe
-                curiosityText = "A Uruçu (Melipona scutellaris) é uma abelha sem ferrão de grande porte, muito valorizada no nordeste do Brasil. Produz um mel de alta qualidade e sabor suave. Sua criação é importante para a conservação da espécie."
+                name = "Jataí",
+                imageResId = R.drawable.jatai,
+                curiosityText = "A abelha Jataí (Tetragonisca angustula) é uma das abelhas sem ferrão mais comuns no Brasil. Pequenas e mansas, produzem um mel delicioso e são ótimas polinizadoras. São fáceis de criar em ambientes urbanos."
             ),
             NativeBee(
                 id = 4,
                 name = "Mandaçaia",
-                imageResId = R.drawable.mandacaia, // Certifique-se que esta imagem existe
+                imageResId = R.drawable.mandacaia,
                 curiosityText = "A Mandaçaia (Melipona quadrifasciata) é uma abelha sem ferrão robusta, famosa pela beleza de sua coloração e pela qualidade do mel. Possui uma mandíbula que lembra açaí, daí o nome."
             )
         )
     }
 
-    // Estado para o item selecionado na bottom bar
-    var selectedBottomNavItem by remember { mutableStateOf(0) } // Home selecionada por padrão
+    var selectedBottomNavItem by remember { mutableStateOf(0) }
+    var searchQuery by remember { mutableStateOf("") }
 
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
-            // --- Custom TopBar para a tela principal ---
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp) // Espaçamento do topo da tela
-                    .height(64.dp) // Altura do conteúdo da barra superior
-                    .background(Color.White) // Fundo branco
+                    .padding(top = 10.dp)
+                    .height(64.dp)
+                    .background(Color.White)
             ) {
-                // Botão "Seja Premium" (canto esquerdo)
                 Image(
                     painter = painterResource(id = R.drawable.sejapremium),
                     contentDescription = "Seja Premium",
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .padding(start = 16.dp)
-                        .size(100.dp, 30.dp)
+                        .padding(start = 2.dp)
+                        .size(105.dp, 80.dp)
                         .clickable { context.startActivity(Intent(context, PremiumOverviewActivity::class.java)) }
                 )
-
-                // Logo Polibee (centro)
                 Image(
                     painter = painterResource(id = R.drawable.logo_bgwhite),
                     contentDescription = "Polibee Logo",
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .size(width = 120.dp, height = 40.dp)
+                        .size(width = 120.dp, height = 45.dp)
                 )
-
-                // Ícone de sacola (canto direito)
                 IconButton(
                     onClick = { context.startActivity(Intent(context, CartActivity::class.java)) },
                     modifier = Modifier
@@ -155,7 +150,7 @@ fun MainScreenContent() {
                         .padding(end = 16.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.sacola), // Certifique-se que esta imagem existe
+                        painter = painterResource(id = R.drawable.sacola),
                         contentDescription = "Carrinho",
                         modifier = Modifier.size(30.dp)
                     )
@@ -171,29 +166,24 @@ fun MainScreenContent() {
                 R.drawable.heart,
                 R.drawable.profile
             )
-
-            // NOVO: Column para garantir que o fundo seja PolibeeDarkGreen até o final
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PolibeeDarkGreen) // AQUI: Garante que toda a área inferior é verde
-                    .navigationBarsPadding() // AQUI: Garante que o conteúdo não se sobreponha à barra de navegação do sistema
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) // <--- AQUI A MUDANÇA: APLIQUE O CLIP APENAS NO COLUMN EXTERNO
+                    .navigationBarsPadding()
             ) {
                 NavigationBar(
-                    containerColor = PolibeeDarkGreen, // Fundo verde escuro para a barra em si
+                    containerColor = PolibeeDarkGreen,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp) // Altura da barra
-                        .padding(horizontal = 16.dp) // Mantém o padding horizontal para o efeito flutuante
-                    // .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) REMOVIDO: Este clip AGORA DEVE SER REMOVIDO DAQUI
+                        .height(80.dp)
+                        .padding(horizontal = 0.dp)
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 ) {
                     items.forEachIndexed { index, item ->
                         NavigationBarItem(
                             selected = selectedBottomNavItem == index,
                             onClick = {
                                 selectedBottomNavItem = index
-                                // Lógica de navegação para as telas correspondentes
                                 when (index) {
                                     0 -> context.startActivity(Intent(context, MainActivity::class.java))
                                     1 -> context.startActivity(Intent(context, HistoryActivity::class.java))
@@ -206,25 +196,25 @@ fun MainScreenContent() {
                                     Image(
                                         painter = painterResource(id = icons[index]),
                                         contentDescription = item,
-                                        modifier = Modifier.size(24.dp), // Tamanho do ícone
-                                        colorFilter = ColorFilter.tint(Color.White) // Ícones sempre brancos
+                                        modifier = Modifier.size(24.dp),
+                                        colorFilter = ColorFilter.tint(Color.White)
                                     )
                                     if (selectedBottomNavItem == index) {
-                                        Spacer(modifier = Modifier.height(4.dp)) // Espaço entre o ícone e o ponto
+                                        Spacer(modifier = Modifier.height(4.dp))
                                         Box(
                                             modifier = Modifier
-                                                .size(6.dp) // Tamanho do ponto
+                                                .size(6.dp)
                                                 .clip(CircleShape)
-                                                .background(PolibeeOrange) // Ponto laranja quando selecionado
+                                                .background(PolibeeOrange)
                                         )
                                     }
                                 }
                             },
-                            label = null, // Sem texto para o label
+                            label = null,
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
-                                unselectedIconColor = Color.Unspecified, // Cor controlada pelo ColorFilter
-                                indicatorColor = Color.Transparent // Sem indicador padrão do Material Design
+                                selectedIconColor = Color.Unspecified,
+                                unselectedIconColor = Color.Unspecified,
+                                indicatorColor = Color.Transparent
                             )
                         )
                     }
@@ -232,20 +222,19 @@ fun MainScreenContent() {
             }
         }
     ) { innerPadding ->
-        // --- Conteúdo Principal da Tela (Scrollable) ---
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding) // Aplica o padding do Scaffold (para não sobrepor Top/Bottom Bar)
-                .verticalScroll(rememberScrollState()) // Torna o conteúdo rolagem vertical
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
                 .background(Color.White)
         ) {
-            // Barra de Pesquisa
-            Spacer(modifier = Modifier.height(16.dp)) // Espaço abaixo da TopBar customizada
+            Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
-                value = "", // Estado para a query de pesquisa (precisaria de um `var searchQuery by remember { mutableStateOf("") }`)
-                onValueChange = { /* Atualizar searchQuery */ },
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
                 label = { Text("Pesquisa", fontFamily = montserratFamily) },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily),
                 leadingIcon = {
                     Image(
                         painter = painterResource(id = R.drawable.lupa),
@@ -264,11 +253,12 @@ fun MainScreenContent() {
                     unfocusedBorderColor = PolibeeDarkGreen,
                     focusedLabelColor = PolibeeDarkGreen,
                     unfocusedLabelColor = PolibeeDarkGreen,
-                    cursorColor = PolibeeDarkGreen
+                    cursorColor = PolibeeDarkGreen,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black
                 )
             )
 
-            // Botões de Categoria
             Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier
@@ -279,32 +269,31 @@ fun MainScreenContent() {
             ) {
                 CategoryButton(
                     iconResId = R.drawable.hive,
-                    text = "Aluguel",
-                    onClick = { context.startActivity(Intent(context, AluguelActivity::class.java)) } // <-- ALTERADO: Agora AluguelActivity é o novo fluxo
+                    text = "Aluguel\n",
+                    onClick = { context.startActivity(Intent(context, AluguelActivity::class.java)) }
                 )
                 CategoryButton(
                     iconResId = R.drawable.cesto,
-                    text = "Marketplace",
+                    text = "Marketplace\n",
                     onClick = { context.startActivity(Intent(context, MarketplaceActivity::class.java)) }
                 )
                 CategoryButton(
                     iconResId = R.drawable.locarvender,
-                    text = "Locar ou Vender",
+                    text = "Locar ou\nVender",
                     onClick = { context.startActivity(Intent(context, ApicultureIntroActivity::class.java)) }
                 )
             }
 
-            // Seção de Abelhas Nativas
             Spacer(modifier = Modifier.height(30.dp))
             Text(
-                text = "Conheça Nossas Abelhas Nativas", // Título da nova seção
+                text = "Conheça Nossas Abelhas Nativas",
                 fontFamily = montserratFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 color = PolibeeDarkGreen,
-                modifier = Modifier.padding(start = 24.dp)
+                modifier = Modifier.padding(start = 20.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -312,7 +301,6 @@ fun MainScreenContent() {
             ) {
                 items(nativeBees) { bee ->
                     NativeBeeCard(bee = bee) { clickedBee ->
-                        // Navega para a tela de curiosidades da abelha
                         val intent = Intent(context, BeeCuriosityActivity::class.java).apply {
                             putExtra("nativeBee", clickedBee)
                         }
@@ -321,12 +309,11 @@ fun MainScreenContent() {
                 }
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
 
-// --- Componente para os Botões de Categoria (mantido) ---
 @Composable
 fun CategoryButton(
     iconResId: Int,
@@ -357,45 +344,50 @@ fun CategoryButton(
             fontFamily = montserratFamily,
             fontSize = 12.sp,
             fontWeight = FontWeight.Normal,
-            color = PolibeeDarkGreen
+            color = PolibeeDarkGreen,
+            textAlign = TextAlign.Center
         )
     }
 }
 
-// --- NOVO Componente para o Cartão de Abelha Nativa ---
 @Composable
 fun NativeBeeCard(bee: NativeBee, onClick: (NativeBee) -> Unit) {
     Card(
         modifier = Modifier
-            .width(180.dp) // Largura ajustada para o card da abelha
-            .height(160.dp) // Altura ajustada
+            .width(200.dp)
+            .height(260.dp)
             .clickable { onClick(bee) },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(25.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
             Image(
                 painter = painterResource(id = bee.imageResId),
                 contentDescription = bee.name,
-                modifier = Modifier
-                    .size(80.dp) // Tamanho da imagem da abelha
-                    .clip(CircleShape), // Imagem circular
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = bee.name,
-                fontFamily = montserratFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = PolibeeDarkGreen,
-                maxLines = 1
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .align(Alignment.BottomCenter)
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .clip(RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = bee.name,
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    maxLines = 1
+                )
+            }
         }
     }
 }

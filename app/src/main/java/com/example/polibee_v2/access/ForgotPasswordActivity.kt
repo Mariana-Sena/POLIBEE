@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.GetStartedScaffold
@@ -86,9 +87,8 @@ fun ForgotPasswordScreen(
                 .padding(horizontal = 30.dp)
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center // Centraliza o conteúdo verticalmente
         ) {
-            Spacer(modifier = Modifier.height(10.dp)) // Espaçamento superior ajustado
+            Spacer(modifier = Modifier.height(70.dp))
 
             Text(
                 text = "Recuperar Senha",
@@ -98,17 +98,18 @@ fun ForgotPasswordScreen(
                 color = PolibeeDarkGreen
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(80.dp))
 
             Text(
                 text = "Informe o e-mail utilizado no cadastro",
                 fontFamily = montserratFamily,
                 fontSize = 16.sp,
                 color = PolibeeDarkGreen,
+                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = email,
@@ -127,7 +128,7 @@ fun ForgotPasswordScreen(
                 Text("E-mail inválido.", color = Color.Red, fontSize = 12.sp)
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(80.dp))
 
             Button(
                 onClick = { onContinueClick(email) },
@@ -139,24 +140,27 @@ fun ForgotPasswordScreen(
             ) {
                 Text(
                     "Continuar",
-                    color = Color.White,
+                    color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             TextButton(
                 onClick = onRecoverWithPhoneClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))) {
                 Text(
                     text = "Recuperar com Número",
                     color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
             }

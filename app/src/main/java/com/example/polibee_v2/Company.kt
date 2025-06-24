@@ -8,12 +8,12 @@ import kotlinx.parcelize.Parcelize
 data class Company(
     val id: Int,
     val name: String,
-    val imageResId: Int, // Imagem da empresa ou colmeia
+    val imageResId: Int,
     val location: String,
     val rating: Float,
     var isFavorite: Boolean = false,
-    val pricePerHour: Float, // Exemplo de preço
+    val pricePerHour: Float,
     val description: String,
-    val availableHives: Int, // Quantidade de colmeias disponíveis
-    val beeType: String // Tipo de abelha que a empresa oferece
+    val availableHives: Int,
+    val beeType: String
 ) : Parcelable

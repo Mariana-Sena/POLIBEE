@@ -28,12 +28,12 @@ import com.example.polibee_v2.montserratFamily
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 
-class MyCardsActivity : ComponentActivity() {
+class MyDataActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Polibee_v2Theme {
-                MyCardsScreen(onBackClick = { finish() })
+                MyDataScreen(onBackClick = { finish() })
             }
         }
     }
@@ -41,13 +41,13 @@ class MyCardsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyCardsScreen(onBackClick: () -> Unit) {
+fun MyDataScreen(onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = "Meus Cartões",
+                        text = "Meus Dados",
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,

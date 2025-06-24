@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/marketplace/ProductDataSource.kt
 package com.example.polibee_v2.marketplace
 
 import com.example.polibee_v2.R
@@ -6,8 +5,6 @@ import androidx.compose.runtime.mutableStateListOf
 
 object ProductDataSource {
     val allProducts = mutableStateListOf<Product>(
-        // Adicione aqui 12 ou mais exemplos de produtos.
-        // Substitua R.drawable.prod_xxxx por seus drawables reais.
         Product(
             id = "prod001",
             name = "Fertilizante de Polinização Premium",
@@ -15,7 +12,7 @@ object ProductDataSource {
             price = 125.50,
             installmentOption = "em até 10x de R$12,55 sem juros",
             description = "Fertilizante orgânico de alta performance, enriquecido com microelementos essenciais para otimizar a polinização assistida e a saúde das abelhas. Aumenta a produção de frutos e sementes.",
-            imageUrl = R.drawable.produto, // Exemplo: crie este drawable
+            imageUrl = R.drawable.produto,
             isFavorite = false
         ),
         Product(
@@ -25,7 +22,7 @@ object ProductDataSource {
             price = 350.00,
             installmentOption = "em até 10x de R$35,00 sem juros",
             description = "Conjunto completo de ferramentas para apicultores iniciantes e experientes, incluindo fumigador, raspador de mel, luvas e véu de proteção. Essencial para o manejo seguro e eficiente das colmeias.",
-            imageUrl = R.drawable.produto, // Exemplo: crie este drawable
+            imageUrl = R.drawable.produto,
             isFavorite = false
         ),
         Product(
@@ -130,7 +127,6 @@ object ProductDataSource {
         )
     )
 
-    // Exemplo de avaliações dummy para a tela de detalhes do produto
     val dummyReviews = mapOf(
         "prod001" to mutableStateListOf(
             Review("rev001", "Ana Silva", 5, "Excelente fertilizante, minhas plantas nunca estiveram tão produtivas!", "01/05/2024"),
@@ -140,7 +136,6 @@ object ProductDataSource {
             Review("rev003", "Maria Oliveira", 5, "Kit super completo e de ótima qualidade, recomendo para todos apicultores.", "20/05/2024"),
             Review("rev004", "Carlos Santos", 3, "As luvas são um pouco apertadas, mas as outras ferramentas são boas.", "10/05/2024")
         )
-        // Adicione mais avaliações dummy para outros produtos conforme necessário
     )
 
     fun toggleFavorite(product: Product) {

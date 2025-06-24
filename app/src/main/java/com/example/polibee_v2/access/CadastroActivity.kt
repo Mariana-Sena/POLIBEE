@@ -19,8 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -30,10 +28,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import androidx.compose.ui.graphics.SolidColor // Import para SolidColor (cor da borda)
+import androidx.compose.ui.graphics.SolidColor
 import com.example.polibee_v2.GetStartedScaffold
 import com.example.polibee_v2.R
-import com.example.polibee_v2.isValidPassword // Importa a função isValidPassword do seu arquivo Utils.kt
+import com.example.polibee_v2.isValidPassword
+import com.example.polibee_v2.montserratFamily
 
 // Definição da cor personalizada para reutilização
 val PolibeeDarkGreen = Color(0xFF0D2016)
@@ -68,11 +67,6 @@ fun CadastroScreen(
 ) {
     val context = LocalContext.current // Obtém o Context para uso nos Toasts
 
-    val montserratFamily = FontFamily(
-        Font(R.font.montserrat_regular),
-        Font(R.font.montserrat_bold, FontWeight.Bold)
-    )
-
     var name by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -87,8 +81,10 @@ fun CadastroScreen(
         focusedBorderColor = PolibeeDarkGreen, // Cor da borda quando focado
         focusedLabelColor = PolibeeDarkGreen,  // Cor do label quando focado
         cursorColor = PolibeeDarkGreen,       // Cor do cursor
-        unfocusedBorderColor = PolibeeDarkGreen, // Cor da borda quando não focado (para consistência visual)
-        unfocusedLabelColor = PolibeeDarkGreen // Cor do label quando não focado (para consistência visual)
+        unfocusedBorderColor = PolibeeDarkGreen, // Cor da borda quando não focado
+        unfocusedLabelColor = PolibeeDarkGreen, // Cor do label quando não focado
+        focusedTextColor = Color.Black,
+        unfocusedTextColor = Color.Black
     )
 
     GetStartedScaffold(
@@ -96,7 +92,6 @@ fun CadastroScreen(
         onBackClick = onBackClicked
     ) { innerPadding ->
         Column(
-            // Removido .verticalScroll para que o conteúdo se ajuste à tela
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 30.dp)
@@ -107,62 +102,61 @@ fun CadastroScreen(
             // Ajustes nos Spacers para caber tudo na tela
             Spacer(modifier = Modifier.height(10.dp)) // Espaçamento superior ajustado
 
-            // Título "Cadastre-se" com a cor solicitada
             Text(
                 text = "Cadastre-se",
                 fontFamily = montserratFamily,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = PolibeeDarkGreen // **Cor do título alterada**
+                color = PolibeeDarkGreen
             )
 
             Spacer(modifier = Modifier.height(20.dp)) // Espaçamento reduzido
 
-            // Campo Nome Completo
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it.filter { char -> char.isLetter() || char.isWhitespace() } },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("Nome Completo", fontFamily = montserratFamily) },
                 singleLine = true,
                 isError = false,
                 modifier = Modifier.fillMaxWidth(),
-                colors = customTextFieldColors // **Aplicando as cores personalizadas**
+                colors = customTextFieldColors
             )
 
             Spacer(modifier = Modifier.height(12.dp)) // Espaçamento reduzido
 
-            // Campo Número de Celular (sem seleção de país/bandeiras complexa por ora)
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it.filter { char -> char.isDigit() } },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("Número de Celular", fontFamily = montserratFamily) },
                 singleLine = true,
-                leadingIcon = { Text("+55", color = PolibeeDarkGreen) }, // Ajustando cor do +55
+                leadingIcon = { Text("+55", color = PolibeeDarkGreen) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = false,
                 modifier = Modifier.fillMaxWidth(),
-                colors = customTextFieldColors // **Aplicando as cores personalizadas**
+                colors = customTextFieldColors
             )
 
-            Spacer(modifier = Modifier.height(12.dp)) // Espaçamento reduzido
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo E-mail
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("E-mail", fontFamily = montserratFamily) },
                 singleLine = true,
                 isError = false,
                 modifier = Modifier.fillMaxWidth(),
-                colors = customTextFieldColors // **Aplicando as cores personalizadas**
+                colors = customTextFieldColors
             )
 
-            Spacer(modifier = Modifier.height(12.dp)) // Espaçamento reduzido
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Senha
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("Senha", fontFamily = montserratFamily) },
                 singleLine = true,
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -183,15 +177,15 @@ fun CadastroScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 isError = false,
                 modifier = Modifier.fillMaxWidth(),
-                colors = customTextFieldColors // **Aplicando as cores personalizadas**
+                colors = customTextFieldColors
             )
 
-            Spacer(modifier = Modifier.height(12.dp)) // Espaçamento reduzido
+            Spacer(modifier = Modifier.height(12.dp))
 
-            // Campo Confirmar Senha
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("Confirmar Senha", fontFamily = montserratFamily) },
                 singleLine = true,
                 visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -212,22 +206,20 @@ fun CadastroScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 isError = false,
                 modifier = Modifier.fillMaxWidth(),
-                colors = customTextFieldColors // **Aplicando as cores personalizadas**
+                colors = customTextFieldColors
             )
 
-            Spacer(modifier = Modifier.height(8.dp)) // Espaçamento mantido
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // Checkbox e Texto de Termos de Uso
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp), // Padding vertical reduzido
+                    .padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
                     checked = termsAccepted,
                     onCheckedChange = { termsAccepted = it },
-                    // **Cor do checkbox alterada**
                     colors = CheckboxDefaults.colors(checkedColor = PolibeeDarkGreen, uncheckedColor = PolibeeDarkGreen)
                 )
                 Text(
@@ -240,11 +232,12 @@ fun CadastroScreen(
                     modifier = Modifier.clickable {
                         Toast.makeText(context, "Link Termos de Uso em breve!", Toast.LENGTH_SHORT).show()
                     },
-                    fontSize = 11.sp // Fonte um pouco menor para economizar espaço
+                    color = Color.Black,
+                    fontFamily = montserratFamily,
+                    fontSize = 9.sp, // Fonte um pouco menor para economizar espaço
                 )
             }
 
-            // Botão "Cadastrar-se"
             Button(
                 onClick = {
                     if (termsAccepted && password == confirmPassword && isValidPassword(password)) {
@@ -260,21 +253,19 @@ fun CadastroScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)) // Cor de fundo laranja mantida
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107))
             ) {
-                // **Cor do texto do botão alterada para branco**
                 Text(
                     "Cadastrar-se",
-                    color = Color.White,
+                    color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp)) // Espaçamento reduzido
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Texto "Já tem conta? Login"
             Text(
                 text = buildAnnotatedString {
                     append("Já tem conta? ")
@@ -283,28 +274,27 @@ fun CadastroScreen(
                     }
                 },
                 modifier = Modifier.clickable(onClick = onLoginClicked),
+                color = Color.Black,
                 fontFamily = montserratFamily,
                 fontSize = 14.sp
             )
 
-            Spacer(modifier = Modifier.height(10.dp)) // Espaçamento reduzido
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Botão "Continue com Google"
+
             OutlinedButton(
                 onClick = { Toast.makeText(context, "Continue com Google em breve!", Toast.LENGTH_SHORT).show() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(20.dp),
-                // **Cores do OutlinedButton alteradas**
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = PolibeeDarkGreen, // Cor do texto e ícone (preto/verde escuro)
-                    containerColor = Color.White // Fundo transparente
+                    contentColor = PolibeeDarkGreen,
+                    containerColor = Color.White
                 ),
-                // **Cor da borda alterada**
                 border = ButtonDefaults.outlinedButtonBorder.copy(
-                    width = 1.dp, // Largura padrão da borda
-                    brush = SolidColor(PolibeeDarkGreen) // Cor da borda
+                    width = 1.dp,
+                    brush = SolidColor(PolibeeDarkGreen)
                 )
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

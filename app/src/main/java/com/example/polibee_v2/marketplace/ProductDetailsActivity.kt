@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/marketplace/ProductDetailsActivity.kt
 package com.example.polibee_v2.marketplace
 
 import android.content.Intent
@@ -10,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,26 +25,35 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.polibee_v2.premium.PaymentActivity // Certifique-se que esta importação está correta
 import com.example.polibee_v2.R
+import com.example.polibee_v2.premium.PaymentActivity
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import com.example.polibee_v2.ui.theme.PolibeeDarkGreen // Verifique se estas cores estão definidas
-import com.example.polibee_v2.ui.theme.PolibeeOrange // Verifique se estas cores estão definidas
-import com.example.polibee_v2.ui.theme.montserratFamily // Verifique se esta fonte está definida
+import com.example.polibee_v2.access.PolibeeDarkGreen
+import com.example.polibee_v2.PolibeeOrange
+import com.example.polibee_v2.montserratFamily
+import com.example.polibee_v2.MainActivity
+import com.example.polibee_v2.nav.HistoryActivity
+import com.example.polibee_v2.nav.FavoritesActivity
+import com.example.polibee_v2.nav.ProfileActivity
+import com.example.polibee_v2.marketplace.CartManager
+import com.example.polibee_v2.marketplace.ProductDataSource
+import com.example.polibee_v2.marketplace.Product
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -58,7 +68,19 @@ class ProductDetailsActivity : ComponentActivity() {
         setContent {
             Polibee_v2Theme {
                 if (product != null) {
-                    ProductDetailsScreen(product = product, onBackClick = { finish() })
+                    ProductDetailsScreen(
+                        product = product,
+                        onBackClick = { finish() },
+                        onBottomNavItemClick = { index ->
+                            when (index) {
+                                0 -> startActivity(Intent(this, MainActivity::class.java))
+                                1 -> startActivity(Intent(this, HistoryActivity::class.java))
+                                2 -> startActivity(Intent(this, FavoritesActivity::class.java))
+                                3 -> startActivity(Intent(this, ProfileActivity::class.java))
+                            }
+                            finish()
+                        }
+                    )
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("Produto não encontrado.", fontFamily = montserratFamily)
@@ -71,34 +93,74 @@ class ProductDetailsActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
+fun ProductDetailsScreen(
+    product: Product,
+    onBackClick: () -> Unit,
+    onBottomNavItemClick: (Int) -> Unit
+) {
     val context = LocalContext.current
     val favoriteState = remember { mutableStateOf(product.isFavorite) }
     var showAddedToCartPopup by remember { mutableStateOf(false) }
+    var selectedBottomNavItem by remember { mutableStateOf(-1) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { }, // Título vazio conforme o protótipo
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {
-                        val intent = Intent(context, CartActivity::class.java)
-                        context.startActivity(intent)
-                    }) {
-                        Icon(
-                            Icons.Filled.ShoppingCart,
-                            contentDescription = "Sacola",
-                            tint = Color.Black
+        containerColor = Color.White,
+        bottomBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+            ) {
+                NavigationBar(
+                    containerColor = PolibeeDarkGreen,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
+                ) {
+                    val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
+                    val icons = listOf(
+                        R.drawable.home,
+                        R.drawable.clock,
+                        R.drawable.heart,
+                        R.drawable.profile
+                    )
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedBottomNavItem == index,
+                            onClick = {
+                                selectedBottomNavItem = index
+                                onBottomNavItemClick(index)
+                            },
+                            icon = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(id = icons[index]),
+                                        contentDescription = item,
+                                        modifier = Modifier.size(24.dp),
+                                        colorFilter = ColorFilter.tint(Color.White)
+                                    )
+                                    if (selectedBottomNavItem == index) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(6.dp)
+                                                .clip(CircleShape)
+                                                .background(PolibeeOrange)
+                                        )
+                                    }
+                                }
+                            },
+                            label = null,
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color.Unspecified,
+                                unselectedIconColor = Color.Unspecified,
+                                indicatorColor = Color.Transparent
+                            )
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White) // Fundo branco
-            )
+                }
+            }
         }
     ) { paddingValues ->
         Column(
@@ -106,42 +168,57 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(Color.White)
-                .verticalScroll(rememberScrollState()) // Permite rolagem para todo o conteúdo
+                .verticalScroll(rememberScrollState())
         ) {
-            // Imagem do Produto
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        Icons.Filled.ArrowBack,
+                        contentDescription = "Voltar",
+                        tint = Color.Black
+                    )
+                }
+            }
+
             Image(
                 painter = painterResource(id = product.imageUrl),
                 contentDescription = product.name,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp)
-                    .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)),
+                    .height(250.dp),
                 contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Text(
+                    text = product.name.uppercase(Locale.ROOT),
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = product.companyName,
+                    fontFamily = montserratFamily,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = product.name.uppercase(Locale.ROOT),
-                            fontFamily = montserratFamily,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 22.sp,
-                            color = Color.Black
-                        )
-                        Text(
-                            text = product.companyName,
-                            fontFamily = montserratFamily,
-                            fontSize = 14.sp,
-                            color = Color.Gray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
+                    Column {
                         Text(
                             text = NumberFormat.getCurrencyInstance(Locale("pt", "BR")).format(product.price),
                             fontFamily = montserratFamily,
@@ -156,21 +233,21 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                             color = Color.Gray
                         )
                     }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                    Column(horizontalAlignment = Alignment.End) {
                         IconButton(
                             onClick = {
                                 ProductDataSource.toggleFavorite(product)
-                                favoriteState.value = !favoriteState.value // Atualiza o estado local
+                                favoriteState.value = !favoriteState.value
                             }
                         ) {
                             Icon(
                                 imageVector = if (favoriteState.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                                 contentDescription = "Favoritar",
-                                tint = Color.Red,
+                                tint = if (favoriteState.value) Color.Red else Color.Black,
                                 modifier = Modifier.size(32.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
                         IconButton(onClick = {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
@@ -190,7 +267,6 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Botões Comprar e Adicionar à Sacola
                 Button(
                     onClick = {
                         val intent = Intent(context, PaymentActivity::class.java)
@@ -207,7 +283,7 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White
+                        color = PolibeeDarkGreen
                     )
                 }
 
@@ -221,11 +297,8 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = PolibeeOrange // Defina a cor do conteúdo (e da borda) aqui
-                    ),
-                    // Remova a linha abaixo, pois ela causava o erro:
-                    // border = ButtonDefaults.outlinedButtonBorder.copy(color = PolibeeOrange),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = PolibeeDarkGreen),
+                    border = BorderStroke(1.dp, PolibeeDarkGreen),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
@@ -238,12 +311,10 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Abas para Informações, Avaliações, Formas de Pagamento
                 ProductDetailsTabs(product = product)
             }
         }
 
-        // Pop-up "Adicionado à Sacola"
         AnimatedVisibility(
             visible = showAddedToCartPopup,
             enter = slideInVertically(initialOffsetY = { fullHeight -> fullHeight }) + fadeIn(),
@@ -252,7 +323,7 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
             val coroutineScope = rememberCoroutineScope()
             LaunchedEffect(Unit) {
                 coroutineScope.launch {
-                    delay(2000) // Exibe por 2 segundos
+                    delay(2000)
                     showAddedToCartPopup = false
                 }
             }
@@ -260,7 +331,7 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable(enabled = false) {}, // Impede interação com o fundo
+                    .clickable(enabled = false) {},
                 contentAlignment = Alignment.Center
             ) {
                 Surface(
@@ -275,7 +346,7 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.sacola), // Substitua pelo seu ícone de sino de compra
+                            painter = painterResource(id = R.drawable.sacola),
                             contentDescription = "Adicionado à Sacola",
                             modifier = Modifier.size(64.dp)
                         )
@@ -293,18 +364,24 @@ fun ProductDetailsScreen(product: Product, onBackClick: () -> Unit) {
         }
     }
 }
-
 @Composable
 fun ProductDetailsTabs(product: Product) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
-    val tabs = listOf("Informações", "Avaliações", "Formas de Pagamento")
+    val tabs = listOf("Infos", "Avaliar", "Pagar")
 
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
             containerColor = Color.White,
-            contentColor = PolibeeOrange, // Cor para o indicador e texto da aba selecionada
-            modifier = Modifier.fillMaxWidth()
+            contentColor = PolibeeOrange,
+            modifier = Modifier.fillMaxWidth(),
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
+                    color = PolibeeOrange,
+                    height = 2.dp
+                )
+            }
         ) {
             tabs.forEachIndexed { index, title ->
                 Tab(
@@ -314,8 +391,10 @@ fun ProductDetailsTabs(product: Product) {
                         Text(
                             text = title,
                             fontFamily = montserratFamily,
-                            fontWeight = FontWeight.Medium,
-                            color = if (selectedTabIndex == index) PolibeeOrange else Color.Gray
+                            fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium,
+                            color = if (selectedTabIndex == index) PolibeeOrange else Color.Black,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                     }
                 )
@@ -334,51 +413,33 @@ fun ProductDetailsTabs(product: Product) {
 
 @Composable
 fun ProductInformationTab(product: Product) {
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "Descrição:",
-            fontFamily = montserratFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Text("Descrição:", fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = product.description,
-            fontFamily = montserratFamily,
-            fontSize = 14.sp
-        )
+        Text(product.description, fontFamily = montserratFamily, fontSize = 14.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Especificações:",
-            fontFamily = montserratFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+        Text("Especificações:", fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "- Peso: 500g\n- Dimensões: 10x10x15cm\n- Material: Plástico Reciclado\n- Validade: 2 anos", // Dados dummy
+            "- Peso: 500g\n- Dimensões: 10x10x15cm\n- Material: Plástico Reciclado\n- Validade: 2 anos",
             fontFamily = montserratFamily,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductReviewsTab(product: Product) {
     val reviews = remember { ProductDataSource.dummyReviews[product.id] ?: mutableStateListOf() }
     var newComment by remember { mutableStateOf("") }
-    var newRating by remember { mutableIntStateOf(0) } // 0 significa nenhuma estrela selecionada
+    var newRating by remember { mutableIntStateOf(0) }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text(
-            text = "Deixe sua avaliação:",
-            fontFamily = montserratFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Text("Deixe sua avaliação:", fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Entrada de classificação por estrelas
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -389,22 +450,28 @@ fun ProductReviewsTab(product: Product) {
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Estrela $star",
                     tint = if (star <= newRating) PolibeeOrange else Color.Gray,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clickable { newRating = star }
+                    modifier = Modifier.size(32.dp).clickable { newRating = star }
                 )
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Entrada de comentário
         OutlinedTextField(
             value = newComment,
             onValueChange = { newComment = it },
             label = { Text("Seu comentário", fontFamily = montserratFamily) },
             modifier = Modifier.fillMaxWidth(),
             maxLines = 4,
-            textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily)
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = PolibeeDarkGreen,
+                unfocusedBorderColor = Color.LightGray,
+                cursorColor = PolibeeDarkGreen,
+                focusedLabelColor = PolibeeDarkGreen,
+                unfocusedLabelColor = Color.Gray,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            ),
+            textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black)
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -413,10 +480,10 @@ fun ProductReviewsTab(product: Product) {
                 if (newComment.isNotBlank() && newRating > 0) {
                     val newReview = Review(
                         id = "rev${(reviews.size + 1).toString().padStart(3, '0')}",
-                        author = "Você", // Placeholder para o usuário atual
+                        author = "Você",
                         rating = newRating,
                         comment = newComment,
-                        date = "09/06/2025" // Data atual
+                        date = "09/06/2025"
                     )
                     reviews.add(newReview)
                     newComment = ""
@@ -432,24 +499,15 @@ fun ProductReviewsTab(product: Product) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "Avaliações dos clientes:",
-            fontFamily = montserratFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+        Text("Avaliações dos clientes:", fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
         Spacer(modifier = Modifier.height(8.dp))
 
         if (reviews.isEmpty()) {
-            Text(
-                text = "Nenhuma avaliação ainda. Seja o primeiro a comentar!",
-                fontFamily = montserratFamily,
-                color = Color.Gray
-            )
+            Text("Nenhuma avaliação ainda. Seja o primeiro a comentar!", fontFamily = montserratFamily, color = Color.Gray)
         } else {
             LazyColumn(
-                userScrollEnabled = false, // Para evitar rolagem aninhada conflitante
-                modifier = Modifier.heightIn(max = 400.dp) // Limita a altura para rolagem das reviews
+                userScrollEnabled = false,
+                modifier = Modifier.heightIn(max = 400.dp)
             ) {
                 items(reviews) { review ->
                     ReviewItem(review = review)
@@ -464,7 +522,7 @@ fun ProductReviewsTab(product: Product) {
 fun ReviewItem(review: Review) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)), // Cor de fundo para o card
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -473,18 +531,8 @@ fun ReviewItem(review: Review) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = review.author,
-                    fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = review.date,
-                    fontFamily = montserratFamily,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
+                Text(review.author, fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.Black)
+                Text(review.date, fontFamily = montserratFamily, fontSize = 12.sp, color = Color.Gray)
             }
             Spacer(modifier = Modifier.height(4.dp))
             Row {
@@ -496,41 +544,35 @@ fun ReviewItem(review: Review) {
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = review.comment,
-                fontFamily = montserratFamily,
-                fontSize = 14.sp
-            )
+            Text(review.comment, fontFamily = montserratFamily, fontSize = 14.sp, color = Color.Black)
         }
     }
 }
 
 @Composable
 fun ProductPaymentMethodsTab() {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Text("Opções de Pagamento:", fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color.Black)
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Opções de Pagamento:",
+            "- Cartão de Crédito/Débito: Aceitamos as principais bandeiras (Visa, Mastercard, Elo, American Express). Parcelamento em até 10x sem juros.",
             fontFamily = montserratFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "- Cartão de Crédito/Débito: Aceitamos as principais bandeiras (Visa, Mastercard, Elo, American Express). Parcelamento em até 10x sem juros.",
+            "- Boleto Bancário: Pagamento à vista com 5% de desconto.",
             fontFamily = montserratFamily,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "- Boleto Bancário: Pagamento à vista com 5% de desconto.",
+            "- Pix: Pagamento instantâneo com 7% de desconto.",
             fontFamily = montserratFamily,
-            fontSize = 14.sp
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "- Pix: Pagamento instantâneo com 7% de desconto.",
-            fontFamily = montserratFamily,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            color = Color.Black
         )
     }
 }

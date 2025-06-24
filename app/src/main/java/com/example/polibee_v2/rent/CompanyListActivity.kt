@@ -25,18 +25,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import androidx.compose.foundation.shape.CircleShape
-import com.example.polibee_v2.AppDataSource // <-- IMPORTANTE: Adicione este import
-import com.example.polibee_v2.Company // <-- Mantenha este import, pois a Company está no pacote pai
+import com.example.polibee_v2.AppDataSource
+import com.example.polibee_v2.Company
 import com.example.polibee_v2.nav.FavoritesActivity
 import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.PolibeeCategoryBtnBg
 import com.example.polibee_v2.PolibeeOrange
-import com.example.polibee_v2.PolibeeTopBarWithTitleAndBack
 import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily
+import androidx.compose.ui.draw.alpha
 
 class CompanyListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,6 @@ class CompanyListActivity : ComponentActivity() {
                 CompanyListScreen(
                     onBackClick = { finish() },
                     onCompanyClick = { company ->
-                        // Passa a empresa para CompanyDetailsActivity
                         val intent = Intent(this, CompanyDetailsActivity::class.java).apply {
                             putExtra("company", company)
                         }
@@ -76,14 +75,8 @@ fun CompanyListScreen(
 ) {
     var selectedBottomNavItem by remember { mutableStateOf(-1) }
 
-    // NÃO DEFINA MAIS A LISTA DE EMPRESAS AQUI.
-    // ELA SERÁ OBTIDA DO AppDataSource.allCompanies
-
     Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            PolibeeTopBarWithTitleAndBack(title = "Com Base em suas Necessidades", onBackClick = onBackClick)
-        },
+        containerColor = Color.White,
         bottomBar = {
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
             val icons = listOf(
@@ -92,21 +85,18 @@ fun CompanyListScreen(
                 R.drawable.heart,
                 R.drawable.profile
             )
-            // APLIQUE A CORREÇÃO DA BARRA DE NAVEGAÇÃO AQUI TAMBÉM:
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PolibeeDarkGreen)
-                    .navigationBarsPadding() // Garante o padding correto para a barra do sistema
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) // CLIP NO COLUMN EXTERNO
+                    .navigationBarsPadding()
             ) {
                 NavigationBar(
                     containerColor = PolibeeDarkGreen,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
-                        .padding(horizontal = 16.dp)
-                    // REMOVA O CLIP DAQUI: .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        .padding(horizontal = 0.dp)
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 ) {
                     items.forEachIndexed { index, item ->
                         NavigationBarItem(
@@ -146,27 +136,73 @@ fun CompanyListScreen(
             }
         }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color.White)
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
             ) {
-                // AGORA VOCÊ PEGA AS EMPRESAS DO AppDataSource.allCompanies
-                items(AppDataSource.allCompanies) { company ->
-                    CompanyListItem(company = company) { onCompanyClick(company) }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.seta_voltar),
+                            contentDescription = "Voltar",
+                            tint = Color.Black,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_bgwhite),
+                        contentDescription = "Polibee Logo",
+                        modifier = Modifier
+                            .width(170.dp)
+                            .padding(start = 70.dp)
+                    )
+
+                    Spacer(Modifier.weight(1f))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Com Base em suas Necessidades",
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 0.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(AppDataSource.allCompanies) { company ->
+                        CompanyListItem(company = company) { onCompanyClick(company) }
+                    }
                 }
             }
         }
     }
 }
 
-// O CompanyListItem Composable permanece o mesmo
 @Composable
 fun CompanyListItem(company: Company, onClick: () -> Unit) {
     Card(
@@ -184,7 +220,6 @@ fun CompanyListItem(company: Company, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                // Use a imagem que está definida na Company (que vem do AppDataSource)
                 painter = painterResource(id = company.imageResId),
                 contentDescription = company.name,
                 modifier = Modifier

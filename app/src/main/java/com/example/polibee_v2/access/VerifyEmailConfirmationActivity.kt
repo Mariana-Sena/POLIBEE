@@ -63,10 +63,11 @@ fun VerifyEmailConfirmationScreen(
                 .padding(horizontal = 30.dp)
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = Modifier.height(110.dp))
+
             Image(
-                painter = painterResource(id = R.drawable.check_icon), // Ícone de sucesso (você precisará adicionar este drawable)
+                painter = painterResource(id = R.drawable.check_icon),
                 contentDescription = "Sucesso",
                 modifier = Modifier.size(100.dp)
             )
@@ -105,7 +106,7 @@ fun VerifyEmailConfirmationScreen(
             ) {
                 Text(
                     "Continuar",
-                    color = Color.White,
+                    color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp

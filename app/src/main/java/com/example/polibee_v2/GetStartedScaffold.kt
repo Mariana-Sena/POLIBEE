@@ -34,7 +34,7 @@ fun GetStartedScaffold(
                     contentDescription = "Logo Polibee",
                     modifier = Modifier
                         .align(Alignment.Center) // Centraliza a logo no meio do Box
-                        .size(width = 120.dp, height = 40.dp)
+                        .size(width = 200.dp, height = 100.dp)
                 )
 
                 // 2. Botão de Voltar: Alinhado à esquerda e centralizado verticalmente

@@ -2,6 +2,7 @@ package com.example.polibee_v2
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,14 +16,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import java.util.regex.Pattern
 
+// Definição de fontes (nível superior, acessível por todos os componentes neste arquivo)
+val montserratFamily = FontFamily(
+    Font(R.font.montserrat_regular),
+    Font(R.font.montserrat_bold, FontWeight.Bold)
+)
+
+// Funções utilitárias
 fun isValidPassword(password: String): Boolean {
     val pattern = Pattern.compile(
         "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#\$%^&+=])(?=\\S+\$).{8,}\$"
@@ -30,9 +39,6 @@ fun isValidPassword(password: String): Boolean {
     return pattern.matcher(password).matches()
 }
 
-// Este Composable pode ser adicionado em um arquivo de utilidades (ex: CommonComposables.kt)
-// ou no final de um dos seus arquivos de Activity para ser acessível.
-// Se você já tem PolibeeDarkGreen e montserratFamily acessíveis, não precisa redefini-los aqui.
 
 @Composable
 fun PolibeeTopBarWithTitleAndBack(
@@ -42,9 +48,9 @@ fun PolibeeTopBarWithTitleAndBack(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 24.dp) // Espaço do topo da tela
-            .height(64.dp) // Altura da barra
-            .background(Color.White) // Fundo branco
+            .padding(top = 24.dp)
+            .height(64.dp)
+            .background(Color.White)
     ) {
         IconButton(
             onClick = onBackClick,
@@ -65,7 +71,47 @@ fun PolibeeTopBarWithTitleAndBack(
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(Alignment.Center)
-                .fillMaxWidth(0.8f) // Para não sobrepor o botão de voltar
+                .fillMaxWidth(0.8f)
+        )
+    }
+}
+
+/**
+ * Composable para o cabeçalho "Pollinate Plus" com opção de botão de voltar.
+ * AGORA NO NÍVEL SUPERIOR!
+ *
+ * @param showBack Define se o botão de voltar deve ser exibido.
+ * @param onBackClick Função a ser executada quando o botão de voltar for clicada.
+ */
+@Composable
+fun PollinatePlusHeader(showBack: Boolean, onBackClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp)
+            .background(Color.White)
+            .padding(horizontal = 16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (showBack) {
+            Image(
+                painter = painterResource(id = R.drawable.seta_voltar),
+                contentDescription = "Voltar",
+                modifier = Modifier
+                    .align(Alignment.CenterStart) // Alinha ao início (esquerda)
+                    .size(24.dp)
+                    .clickable { onBackClick() }, // Torna o ícone clicável
+                colorFilter = ColorFilter.tint(PolibeeDarkGreen) // Colore o ícone
+            )
+        }
+
+        Text(
+            text = "Pollinate Plus",
+            fontFamily = montserratFamily,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            color = PolibeeDarkGreen,
+            modifier = Modifier.align(Alignment.Center)
         )
     }
 }

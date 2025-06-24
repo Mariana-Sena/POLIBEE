@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/ApicultureIntroActivity.kt
 package com.example.polibee_v2.rent
 
 import android.content.Intent
@@ -30,7 +29,6 @@ import com.example.polibee_v2.nav.FavoritesActivity
 import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.PolibeeOrange
-import com.example.polibee_v2.PolibeeTopBarWithTitleAndBack
 import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
@@ -59,7 +57,6 @@ class ApicultureIntroActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApicultureIntroScreen(
     onBackClick: () -> Unit,
@@ -70,9 +67,6 @@ fun ApicultureIntroScreen(
 
     Scaffold(
         containerColor = Color.Transparent,
-        topBar = {
-            PolibeeTopBarWithTitleAndBack(title = "Apicultura", onBackClick = onBackClick)
-        },
         bottomBar = {
             val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
             val icons = listOf(
@@ -81,47 +75,53 @@ fun ApicultureIntroScreen(
                 R.drawable.heart,
                 R.drawable.profile
             )
-            NavigationBar(
-                containerColor = PolibeeDarkGreen,
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                    .navigationBarsPadding()
             ) {
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = selectedBottomNavItem == index,
-                        onClick = {
-                            selectedBottomNavItem = index
-                            onBottomNavItemClick(index)
-                        },
-                        icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = painterResource(id = icons[index]),
-                                    contentDescription = item,
-                                    modifier = Modifier.size(24.dp),
-                                    colorFilter = ColorFilter.tint(Color.White)
-                                )
-                                if (selectedBottomNavItem == index) {
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Box(
-                                        modifier = Modifier
-                                            .size(6.dp)
-                                            .clip(CircleShape)
-                                            .background(PolibeeOrange)
+                NavigationBar(
+                    containerColor = PolibeeDarkGreen,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(horizontal = 0.dp)
+                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                ) {
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedBottomNavItem == index,
+                            onClick = {
+                                selectedBottomNavItem = index
+                                onBottomNavItemClick(index)
+                            },
+                            icon = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(id = icons[index]),
+                                        contentDescription = item,
+                                        modifier = Modifier.size(24.dp),
+                                        colorFilter = ColorFilter.tint(Color.White)
                                     )
+                                    if (selectedBottomNavItem == index) {
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Box(
+                                            modifier = Modifier
+                                                .size(6.dp)
+                                                .clip(CircleShape)
+                                                .background(PolibeeOrange)
+                                        )
+                                    }
                                 }
-                            }
-                        },
-                        label = null,
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Unspecified,
-                            unselectedIconColor = Color.Unspecified,
-                            indicatorColor = Color.Transparent
+                            },
+                            label = null,
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color.Unspecified,
+                                unselectedIconColor = Color.Unspecified,
+                                indicatorColor = Color.Transparent
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -134,9 +134,43 @@ fun ApicultureIntroScreen(
                 .background(Color.White),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .background(Color.White)
+                    .padding(bottom = 16.dp)
+            ) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(top = 16.dp, start = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.seta_voltar),
+                        contentDescription = "Voltar",
+                        modifier = Modifier.size(30.dp),
+                        colorFilter = ColorFilter.tint(Color.Black)
+                    )
+                }
+                Text(
+                    "Apicultura",
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
+                        .padding(top = 16.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
             Image(
-                painter = painterResource(id = R.drawable.apicultura), // Certifique-se que esta imagem existe
+                painter = painterResource(id = R.drawable.apicultura),
                 contentDescription = "Imagem de Apicultura",
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -199,7 +233,7 @@ fun ApicultureIntroScreen(
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = PolibeeOrange)
             ) {
-                Text("Avançar", color = Color.White, fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("Avançar", color = PolibeeDarkGreen, fontFamily = montserratFamily, fontWeight = FontWeight.Bold, fontSize = 18.sp)
             }
             Spacer(modifier = Modifier.height(24.dp))
         }

@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/CompanyDetailsActivity.kt
 package com.example.polibee_v2.rent
 
 import android.content.Intent
@@ -8,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,7 +29,6 @@ import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.text.style.TextAlign
 import com.example.polibee_v2.AppDataSource
-import com.example.polibee_v2.ChatActivity
 import com.example.polibee_v2.Company
 import com.example.polibee_v2.nav.FavoritesActivity
 import com.example.polibee_v2.nav.HistoryActivity
@@ -39,6 +38,9 @@ import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.access.PolibeeDarkGreen
 import com.example.polibee_v2.montserratFamily
+import androidx.compose.ui.draw.alpha
+import androidx.compose.foundation.layout.navigationBarsPadding
+import java.util.Locale
 
 class CompanyDetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +48,7 @@ class CompanyDetailsActivity : ComponentActivity() {
         val company = intent.getParcelableExtra<Company>("company")
 
         company?.let {
-            AppDataSource.addCompanyToHistory(it) // <--- ADICIONE ESTA LINHA
+            AppDataSource.addCompanyToHistory(it)
         }
 
         setContent {
@@ -63,7 +65,7 @@ class CompanyDetailsActivity : ComponentActivity() {
                             startActivity(intent)
                         },
                         onRentClick = {
-                            startActivity(Intent(this, AvailabilityActivity::class.java)) // Navega para a próxima página
+                            startActivity(Intent(this, AvailabilityActivity::class.java))
                         },
                         onBottomNavItemClick = { index ->
                             when (index) {
@@ -98,216 +100,296 @@ fun CompanyDetailsScreen(
     var selectedBottomNavItem by remember { mutableStateOf(-1) }
 
     Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-            // Reutilizando o TopBar com o nome da empresa como título
-            Box(
+        containerColor = PolibeeDarkGreen,
+        bottomBar = {
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp)
-                    .height(64.dp)
                     .background(Color.White)
             ) {
-                IconButton(
-                    onClick = onBackClick,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.seta_voltar),
-                        contentDescription = "Voltar",
-                        modifier = Modifier.size(30.dp),
-                        colorFilter = ColorFilter.tint(PolibeeDarkGreen)
-                    )
-                }
-                Text(
-                    text = company.name,
-                    fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    color = PolibeeDarkGreen,
-                    textAlign = TextAlign.Center,
+                Button(
+                    onClick = onRentClick,
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .fillMaxWidth(0.8f)
-                )
-            }
-        },
-        bottomBar = {
-            // Botão "Alugar" fixo no rodapé, como no protótipo original da Meliproa
-            Button(
-                onClick = onRentClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PolibeeOrange)
-            ) {
-                Text(
-                    "Alugar",
-                    color = Color.White,
-                    fontFamily = montserratFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-            }
-            // NOTA: Se você quiser o menu inferior aqui TAMBÉM, adicione-o abaixo do botão "Alugar"
-            // mas o protótipo original da Meliproa não o mostrava.
-            // Para manter a consistência com o protótipo fornecido para a página da Meliproa,
-            // esta tela não terá o menu de navegação inferior padrão, apenas o botão "Alugar".
-            // Se precisar do menu, podemos adaptar.
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .background(Color.White)
-        ) {
-            // Seção Superior com imagem da empresa e overlay
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = company.imageResId),
-                    contentDescription = "Imagem da Empresa",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-                // Ícone de Coração para Favorito
-                IconButton(
-                    onClick = {
-                        // isFavorite é o estado local para o ícone
-                        isFavorite = !isFavorite
-                        // Atualiza o estado global da empresa via AppDataSource
-                        AppDataSource.toggleFavoriteStatus(company.id)
-                    },
-                        modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(16.dp)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.4f))
-                ) {
-                    Image(
-                        painter = painterResource(
-                            id = if (isFavorite) R.drawable.heart_filled else R.drawable.heart
-                        ), // Certifique-se que heart_filled e heart existem
-                        contentDescription = "Favorito",
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
-                }
-
-                // Informações da Empresa (Nome, Localização, Rating) - Overlay na imagem
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
                         .fillMaxWidth()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                        .padding(16.dp)
+                        .height(60.dp)
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = PolibeeOrange)
                 ) {
                     Text(
-                        text = company.name,
+                        "Alugar",
+                        color = PolibeeDarkGreen,
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        color = Color.White
+                        fontSize = 20.sp
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                val items = listOf("Home", "Histórico", "Favoritos", "Perfil")
+                val icons = listOf(
+                    R.drawable.home,
+                    R.drawable.clock,
+                    R.drawable.heart,
+                    R.drawable.profile
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                ) {
+                    NavigationBar(
+                        containerColor = PolibeeDarkGreen,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                            .padding(horizontal = 0.dp)
+                            .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.location_pin), // Certifique-se que esta imagem existe
-                                contentDescription = "Localização",
-                                tint = Color.White,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = company.location,
-                                fontFamily = montserratFamily,
-                                fontSize = 16.sp,
-                                color = Color.White
-                            )
-                        }
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Image(
-                                painter = painterResource(id = R.drawable.star),
-                                contentDescription = "Estrela de Avaliação",
-                                modifier = Modifier.size(16.dp),
-                                colorFilter = ColorFilter.tint(Color.Yellow)
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = company.rating.toString(),
-                                fontFamily = montserratFamily,
-                                fontSize = 16.sp,
-                                color = Color.White
+                        items.forEachIndexed { index, item ->
+                            NavigationBarItem(
+                                selected = selectedBottomNavItem == index,
+                                onClick = {
+                                    selectedBottomNavItem = index
+                                    onBottomNavItemClick(index)
+                                },
+                                icon = {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Image(
+                                            painter = painterResource(id = icons[index]),
+                                            contentDescription = item,
+                                            modifier = Modifier.size(24.dp),
+                                            colorFilter = ColorFilter.tint(Color.White)
+                                        )
+                                        if (selectedBottomNavItem == index) {
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(6.dp)
+                                                    .clip(CircleShape)
+                                                    .background(PolibeeOrange)
+                                            )
+                                        }
+                                    }
+                                },
+                                label = null,
+                                colors = NavigationBarItemDefaults.colors(
+                                    selectedIconColor = Color.Unspecified,
+                                    unselectedIconColor = Color.Unspecified,
+                                    indicatorColor = Color.Transparent
+                                )
                             )
                         }
                     }
                 }
             }
-
-            // Valor do Aluguel
-            Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "R$ ${String.format("%.2f", company.pricePerHour)} / Hora",
-                fontFamily = montserratFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp,
-                color = PolibeeDarkGreen,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Botão Conversar
-            Button(
-                onClick = { onChatClick(company.name, company.imageResId) },
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.favo),
+                contentDescription = "Padrão Favo de Mel",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(horizontal = 24.dp),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PolibeeDarkGreen)
+                    .align(Alignment.TopEnd)
+                    .offset(x = 100.dp, y = (-150).dp)
+                    .size(200.dp)
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .background(Color.White)
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.enviar), // Certifique-se que esta imagem existe
-                        contentDescription = "Enviar Mensagem",
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.seta_voltar),
+                            contentDescription = "Voltar",
+                            tint = Color.Black,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.weight(1f))
+
                     Text(
-                        "Conversar",
-                        color = Color.White,
+                        text = company.name,
                         fontFamily = montserratFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 20.sp,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .offset(x = (-24).dp)
                     )
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
 
-            // Descrição da Colmeia
-            Text(
-                text = company.description,
-                fontFamily = montserratFamily,
-                fontSize = 16.sp,
-                color = PolibeeDarkGreen,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .width(400.dp)
+                        .height(300.dp)
+                        .padding(horizontal = 24.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                ) {
+                    Image(
+                        painter = painterResource(id = company.imageResId),
+                        contentDescription = "Imagem da Empresa",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(16.dp)
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color.Black.copy(alpha = 0.4f))
+                            .clickable {
+                                isFavorite = !isFavorite
+                                AppDataSource.toggleFavoriteStatus(company.id)
+                                Toast.makeText(context, if (isFavorite) "Adicionado aos favoritos!" else "Removido dos favoritos!", Toast.LENGTH_SHORT).show()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(
+                                id = if (isFavorite) R.drawable.heart_filled else R.drawable.heart
+                            ),
+                            contentDescription = "Favoritar",
+                            modifier = Modifier.size(24.dp),
+                            colorFilter = ColorFilter.tint(Color.White)
+                        )
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.Black.copy(alpha = 0.7f)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = company.name,
+                                fontFamily = montserratFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp,
+                                color = Color.White
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.location_pin),
+                                        contentDescription = "Localização",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = company.location,
+                                        fontFamily = montserratFamily,
+                                        fontSize = 16.sp,
+                                        color = Color.White
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.star),
+                                        contentDescription = "Estrela de Avaliação",
+                                        modifier = Modifier.size(16.dp),
+                                        colorFilter = ColorFilter.tint(Color.Yellow)
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text(
+                                        text = company.rating.toString(),
+                                        fontFamily = montserratFamily,
+                                        fontSize = 16.sp,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+                Text(
+                    text = "R$ ${String.format(Locale.getDefault(), "%.2f", company.pricePerHour)} / Hora",
+                    fontFamily = montserratFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = PolibeeDarkGreen,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = { onChatClick(company.name, company.imageResId) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .padding(horizontal = 24.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = PolibeeDarkGreen)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.enviar),
+                            contentDescription = "Enviar Mensagem",
+                            modifier = Modifier.size(24.dp),
+                            colorFilter = ColorFilter.tint(Color.White)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            "Conversar",
+                            color = Color.White,
+                            fontFamily = montserratFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = company.description,
+                    fontFamily = montserratFamily,
+                    fontSize = 16.sp,
+                    color = PolibeeDarkGreen,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(180.dp))
+            }
         }
     }
 }

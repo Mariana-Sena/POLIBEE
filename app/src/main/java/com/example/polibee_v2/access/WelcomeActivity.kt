@@ -55,7 +55,6 @@ fun WelcomeScreen(
     onStartHereClicked: () -> Unit,
     onAccessibilityClicked: () -> Unit
 ) {
-    // Definir a fonte Montserrat
     val montserratFamily = FontFamily(
         Font(R.font.montserrat_regular),
         Font(R.font.montserrat_bold, FontWeight.Bold)
@@ -83,15 +82,13 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.height(48.dp)) // Espaço fixo do topo
 
             Image(
-                painter = painterResource(id = R.drawable.polibee_bee),
+                painter = painterResource(id = R.drawable.logo_pollinate),
                 contentDescription = "Logo Polibee",
                 modifier = Modifier.size(100.dp)
             )
 
-            // Área central mais flexível
             Spacer(modifier = Modifier.weight(10f))
 
-            // Texto "Junte-se à POLIBEE" com tamanho aumentado
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
@@ -111,10 +108,8 @@ fun WelcomeScreen(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
 
-            // Área flexível antes dos botões (mais peso para empurrar botões para cima)
             Spacer(modifier = Modifier.weight(1.5f))
 
-            // Botões mais para cima - usando padding com peso
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(bottom = 48.dp) // Fixado a 48dp do fundo

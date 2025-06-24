@@ -38,10 +38,8 @@ class ResetPasswordActivity : ComponentActivity() {
                 ResetPasswordScreen(
                     onBackClicked = { finish() },
                     onResetPasswordSuccess = {
-                        // Simular sucesso e retornar ao login
+                        // Para simular sucesso e retornar ao login
                         Toast.makeText(this, "Senha alterada com sucesso!", Toast.LENGTH_LONG).show()
-                        // Limpa a pilha de atividades e volta para LoginActivity (se já estiver lá)
-                        // ou cria uma nova instância de LoginActivity no topo da pilha.
                         val intent = Intent(this, LoginActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
@@ -72,7 +70,6 @@ fun ResetPasswordScreen(
     var passwordError by remember { mutableStateOf(false) }
     var confirmPasswordError by remember { mutableStateOf(false) }
 
-
     // Cores dos campos de texto (reaproveitando)
     val customTextFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         focusedBorderColor = PolibeeDarkGreen,
@@ -92,9 +89,8 @@ fun ResetPasswordScreen(
                 .padding(horizontal = 30.dp)
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(120.dp))
 
             Text(
                 text = "Nova Senha",
@@ -143,7 +139,7 @@ fun ResetPasswordScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
                 value = confirmNewPassword,
@@ -177,7 +173,7 @@ fun ResetPasswordScreen(
                 Text("As senhas não coincidem.", color = Color.Red, fontSize = 12.sp)
             }
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(80.dp))
 
             Button(
                 onClick = onResetPasswordSuccess,
@@ -190,7 +186,7 @@ fun ResetPasswordScreen(
             ) {
                 Text(
                     "Continuar",
-                    color = Color.White,
+                    color = PolibeeDarkGreen,
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp

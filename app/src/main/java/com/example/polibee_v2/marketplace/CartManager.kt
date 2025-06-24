@@ -1,4 +1,3 @@
-// src/main/java/com/example/polibee_v2/marketplace/CartManager.kt
 package com.example.polibee_v2.marketplace
 
 import androidx.compose.runtime.mutableStateListOf

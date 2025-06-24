@@ -15,7 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext // Import adicionado
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -32,7 +32,7 @@ import com.example.polibee_v2.GetStartedScaffold
 import com.example.polibee_v2.MainActivity
 import com.example.polibee_v2.R
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
-import com.example.polibee_v2.isValidPassword // Certifique-se de que está importada
+import com.example.polibee_v2.isValidPassword
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,6 @@ class LoginActivity : ComponentActivity() {
                 LoginScreen(
                     onBackClicked = { finish() },
                     onForgotPasswordClick = {
-                        // **Ajuste aqui:** Iniciar a ForgotPasswordActivity
                         startActivity(Intent(this, ForgotPasswordActivity::class.java))
                     },
                     onRegisterClick = {
@@ -61,7 +60,7 @@ class LoginActivity : ComponentActivity() {
     }
 }
 
-// Seu LoginScreen Composable (sem alterações no corpo, apenas o onForgotPasswordClick será chamado)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onBackClicked: () -> Unit,
@@ -80,7 +79,7 @@ fun LoginScreen(
     var emailError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
     var passwordVisible by remember { mutableStateOf(false) }
-    val customColor = Color(0xFF243434) // Este customColor é do seu código anterior, mantive.
+    val customColor = Color(0xFF243434)
 
     GetStartedScaffold(
         showBack = true,
@@ -97,6 +96,7 @@ fun LoginScreen(
             Text(
                 text = "Login",
                 fontFamily = montserratFamily,
+                color = Color.Black,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -109,10 +109,20 @@ fun LoginScreen(
                     email = it
                     emailError = !it.contains("@")
                 },
+                textStyle = LocalTextStyle.current.copy(fontFamily = montserratFamily, color = Color.Black),
                 label = { Text("E-mail", fontFamily = montserratFamily) },
                 singleLine = true,
                 isError = emailError,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.Black,   // Texto de entrada quando o campo está focado
+                    unfocusedTextColor = Color.Black, // Texto de entrada quando o campo não está focado
+                    focusedBorderColor = PolibeeDarkGreen,
+                    unfocusedBorderColor = PolibeeDarkGreen,
+                    focusedLabelColor = PolibeeDarkGreen,
+                    unfocusedLabelColor = PolibeeDarkGreen,
+                    cursorColor = PolibeeDarkGreen
+                )
             )
             if (emailError) {
                 Text("E-mail inválido.", color = Color.Red, fontSize = 12.sp)
@@ -126,6 +136,7 @@ fun LoginScreen(
                     password = it
                     passwordError = !isValidPassword(password)
                 },
+                textStyle = LocalTextStyle.current.copy(fontFamily = com.example.polibee_v2.montserratFamily, color = Color.Black), // Define a fonte do texto digitado
                 label = { Text("Senha", fontFamily = montserratFamily) },
                 singleLine = true,
                 isError = passwordError,
@@ -145,7 +156,16 @@ fun LoginScreen(
                             .clickable { passwordVisible = !passwordVisible }
                     )
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedTextColor = Color.Black,   // Texto de entrada quando o campo está focado
+                    unfocusedTextColor = Color.Black, // Texto de entrada quando o campo não está focado
+                    focusedBorderColor = PolibeeDarkGreen,
+                    unfocusedBorderColor = PolibeeDarkGreen,
+                    focusedLabelColor = PolibeeDarkGreen,
+                    unfocusedLabelColor = PolibeeDarkGreen,
+                    cursorColor = PolibeeDarkGreen
+                )
             )
             if (passwordError) {
                 Text(
@@ -199,6 +219,7 @@ fun LoginScreen(
                 },
                 fontSize = 14.sp,
                 fontFamily = montserratFamily,
+                color = Color.Black,
                 modifier = Modifier.clickable(onClick = onRegisterClick)
             )
 
@@ -207,6 +228,7 @@ fun LoginScreen(
             Text(
                 text = "ou",
                 fontSize = 14.sp,
+                color = Color.Black,
                 fontFamily = montserratFamily,
                 fontWeight = FontWeight.Bold
             )
