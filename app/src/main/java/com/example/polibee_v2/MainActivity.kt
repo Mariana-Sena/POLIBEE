@@ -33,6 +33,9 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 import com.example.polibee_v2.access.PolibeeDarkGreen
+import com.example.polibee_v2.commercial.CommercialProfileRepository
+import com.example.polibee_v2.commercial.CreateCommercialProfileActivity
+import com.example.polibee_v2.commercial.WhatToDoActivity
 import com.example.polibee_v2.marketplace.CartActivity
 import com.example.polibee_v2.marketplace.MarketplaceActivity
 import com.example.polibee_v2.nav.FavoritesActivity
@@ -40,7 +43,6 @@ import com.example.polibee_v2.nav.HistoryActivity
 import com.example.polibee_v2.premium.PremiumOverviewActivity
 import com.example.polibee_v2.nav.ProfileActivity
 import com.example.polibee_v2.rent.AluguelActivity
-import com.example.polibee_v2.rent.ApicultureIntroActivity
 
 val PolibeeOrange = Color(0xFFFFC107)
 val PolibeeCategoryBtnBg = Color(0xFFFFB304)
@@ -69,6 +71,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreenContent() {
     val context = LocalContext.current
+    // Verifica se há um perfil comercial. Isso fará o Composable recompor se o perfil for salvo/limpo.
+    val hasCommercialProfile by CommercialProfileRepository.currentProfile.collectAsState(initial = null)
 
     val nativeBees = remember {
         mutableStateListOf(
@@ -280,7 +284,17 @@ fun MainScreenContent() {
                 CategoryButton(
                     iconResId = R.drawable.locarvender,
                     text = "Locar ou\nVender",
-                    onClick = { context.startActivity(Intent(context, ApicultureIntroActivity::class.java)) }
+                    onClick = {
+                        // NOVO FLUXO SIMPLIFICADO PARA "LOCAR OU VENDER"
+                        val intent = if (CommercialProfileRepository.hasProfile()) {
+                            // Se já tem um perfil salvo, vai direto para "O que deseja fazer?"
+                            Intent(context, WhatToDoActivity::class.java)
+                        } else {
+                            // Se não tem, vai para a criação do perfil
+                            Intent(context, CreateCommercialProfileActivity::class.java)
+                        }
+                        context.startActivity(intent)
+                    }
                 )
             }
 

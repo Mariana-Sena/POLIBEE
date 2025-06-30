@@ -43,7 +43,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-val PolibeeDarkGreen = Color(0xFF2E7D32) // Exemplo de um verde escuro
+val PolibeeDarkGreen = Color(0xFF101B15) // Exemplo de um verde escuro
 val PolibeeOrange = Color(0xFFFF9800) // Exemplo de um laranja
 
 @Composable

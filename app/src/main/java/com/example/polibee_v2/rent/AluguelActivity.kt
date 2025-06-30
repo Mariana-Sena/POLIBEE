@@ -74,19 +74,18 @@ fun AluguelFlowStarterScreen(
                 R.drawable.heart,
                 R.drawable.profile
             )
-            Column( // Padrão da bottom bar com bordas arredondadas e cor de fundo
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(PolibeeDarkGreen) // Garante que a área abaixo da barra também seja verde
-                    .navigationBarsPadding() // Garante que não sobreponha a barra de navegação do sistema
+                    .navigationBarsPadding()
             ) {
                 NavigationBar(
-                    containerColor = PolibeeDarkGreen, // Fundo verde escuro para a barra em si
+                    containerColor = PolibeeDarkGreen,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp) // Altura da barra
-                        .padding(horizontal = 0.dp) // <--- CRUCIAL: Remove padding interno que criaria "barra branca"
-                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) // Bordas arredondadas superiores
+                        .height(80.dp)
+                        .padding(horizontal = 0.dp)
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp))
                 ) {
                     items.forEachIndexed { index, item ->
                         NavigationBarItem(

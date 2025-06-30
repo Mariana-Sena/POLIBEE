@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -52,7 +53,7 @@
         <activity android:name=".access.VerifyEmailConfirmationActivity" android:exported="false" />
         <activity android:name=".access.EnterCodeActivity" android:exported="false" />
         <activity android:name=".access.ResetPasswordActivity" android:exported="false" />
-        <activity android:name=".PremiumPlansActivity" android:exported="false" />
+<!--        <activity android:name=".PremiumPlansActivity" android:exported="false" />-->
 
         <activity android:name=".marketplace.CartActivity" android:exported="false"
             tools:ignore="Instantiatable" />
@@ -60,8 +61,8 @@
             tools:ignore="Instantiatable" />
         <activity android:name=".marketplace.MarketplaceActivity" android:exported="false"
             tools:ignore="Instantiatable" />
-        <activity android:name=".CertificacaoActivity" android:exported="false"
-            tools:ignore="Instantiatable" />
+<!--        <activity android:name=".CertificacaoActivity" android:exported="false"-->
+<!--            tools:ignore="Instantiatable,MissingClass" />-->
         <activity android:name=".nav.HistoryActivity" android:exported="false"
             tools:ignore="Instantiatable" />
         <activity android:name=".nav.FavoritesActivity" android:exported="false"
@@ -76,14 +77,9 @@
         <activity android:name=".profile.MyDataActivity" android:exported="false" />
         <activity android:name=".profile.PrivacySecurityActivity" android:exported="false" />
         <activity android:name=".profile.MyCardsActivity" android:exported="false" />
-        <activity android:name=".RentOrSellActivity" android:exported="false" />
-        <activity android:name=".profile.AccessibilityActivity" android:exported="false" />
+        <activity android:name=".profile.AcessibilityActivity" android:exported="false"
+            tools:ignore="MissingClass" />
         <activity android:name=".profile.PolibeeSupportActivity" android:exported="false" />
-
-        <!-- PODEM SER REMOVIDAS -->
-        <activity android:name=".PremiumBenefitsActivity" android:exported="false" />
-        <activity android:name=".PremiumPlansActivity" android:exported="false"
-            tools:ignore="DuplicateActivity" />
 
         <!-- NOVA ATIVIDADE PREMIUM (substitui as anteriores) -->
         <activity android:name=".premium.PremiumOverviewActivity" android:exported="false" />
@@ -124,5 +120,41 @@
             android:name=".marketplace.PaymentActivity"
             android:exported="false" />
 
+
+        <activity
+            android:name=".commercial.CreateCommercialProfileActivity"
+            android:exported="false"
+            android:label="Criar Perfil Comercial"
+            android:theme="@style/Theme.Polibee_v2" />
+
+        <activity
+            android:name=".commercial.WhatToDoActivity"
+            android:exported="false"
+            android:label="O Que Deseja Fazer?"
+            android:theme="@style/Theme.Polibee_v2" />
+
+        <activity
+            android:name=".commercial.CreateCommercialProfileActivity"
+            android:exported="false"
+            android:label="Criar Perfil Comercial"
+            android:theme="@style/Theme.Polibee_v2"
+            tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".commercial.WhatToDoActivity"
+            android:exported="false"
+            android:label="O Que Deseja Fazer?"
+            android:theme="@style/Theme.Polibee_v2"
+            tools:ignore="DuplicateActivity" />
+        <!-- Novas Activities de Registro -->
+        <activity
+            android:name=".commercial.registration.RegisterProductActivity"
+            android:exported="false"
+            android:label="Cadastrar Produto"
+            android:theme="@style/Theme.Polibee_v2" />
+        <activity
+            android:name=".commercial.registration.RegisterHiveActivity"
+            android:exported="false"
+            android:label="Cadastrar Colmeia"
+            android:theme="@style/Theme.Polibee_v2" />
     </application>
 </manifest>
