@@ -11,7 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,11 +37,9 @@ import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import com.example.polibee_v2.PolibeeOrange // Importa sua cor PolibeeOrange
 import com.example.polibee_v2.montserratFamily // Importa sua fonte montserratFamily
 import androidx.compose.foundation.layout.navigationBarsPadding // Importa navigationBarsPadding
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.example.polibee_v2.MainActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 
 class WhatToDoActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +67,39 @@ class WhatToDoActivity : ComponentActivity() {
 fun WhatToDoScreen(onBottomNavItemClick: (Int) -> Unit) {
     val context = LocalContext.current
     var selectedBottomNavItem by remember { mutableStateOf(-1) }
+    var showMenu by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Excluir Perfil", fontFamily = montserratFamily, fontWeight = FontWeight.Bold) },
+            text = { Text("Você tem certeza que deseja excluir seu perfil comercial? Esta ação não pode ser desfeita.", fontFamily = montserratFamily) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        CommercialProfileRepository.deleteProfile()
+                        Toast.makeText(context, "Perfil excluído.", Toast.LENGTH_SHORT).show()
+                        showDeleteDialog = false
+
+                        val intent = Intent(context, MainActivity::class.java).apply {
+                            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        }
+                        context.startActivity(intent)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Confirmar", color = Color.White)
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -92,7 +123,40 @@ fun WhatToDoScreen(onBottomNavItemClick: (Int) -> Unit) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
+                actions = {
+                    Box {
+                        IconButton(onClick = { showMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Opções",
+                                tint = PolibeeDarkGreen
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Editar perfil", fontFamily = montserratFamily) },
+                                onClick = {
+                                    showMenu = false
+                                    val intent = Intent(context, CreateCommercialProfileActivity::class.java).apply {
+                                        putExtra("IS_EDIT_MODE", true)
+                                    }
+                                    context.startActivity(intent)
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Excluir perfil", fontFamily = montserratFamily, color = Color.Red) },
+                                onClick = {
+                                    showMenu = false
+                                    showDeleteDialog = true
+                                }
+                            )
+                        }
+                    }
+                }
             )
         },
         bottomBar = { // BARRA DE NAVEGAÇÃO ADICIONADA AQUI!

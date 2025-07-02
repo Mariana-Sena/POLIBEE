@@ -78,13 +78,13 @@ object CommercialProfileRepository {
     }
 
     /**
-     * Exclui o perfil comercial salvo, limpando as SharedPreferences.
+     * Exclui o perfil comercial salvo.
      */
-    fun clearProfile() {
+    fun deleteProfile() {
         with(sharedPreferences.edit()) {
             clear()
             apply()
         }
-        _currentProfile.value = null // Atualiza o StateFlow
+        _currentProfile.value = null
     }
 }

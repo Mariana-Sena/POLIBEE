@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.polibee_v2.ui.theme.Polibee_v2Theme
 import android.os.Parcelable
+import androidx.compose.runtime.collectAsState
 import kotlinx.parcelize.Parcelize
 
 import com.example.polibee_v2.access.PolibeeDarkGreen
@@ -71,8 +72,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreenContent() {
     val context = LocalContext.current
-    // Verifica se há um perfil comercial. Isso fará o Composable recompor se o perfil for salvo/limpo.
-    val hasCommercialProfile by CommercialProfileRepository.currentProfile.collectAsState(initial = null)
+    val commercialProfile by CommercialProfileRepository.currentProfile.collectAsState()
 
     val nativeBees = remember {
         mutableStateListOf(
@@ -285,12 +285,9 @@ fun MainScreenContent() {
                     iconResId = R.drawable.locarvender,
                     text = "Locar ou\nVender",
                     onClick = {
-                        // NOVO FLUXO SIMPLIFICADO PARA "LOCAR OU VENDER"
-                        val intent = if (CommercialProfileRepository.hasProfile()) {
-                            // Se já tem um perfil salvo, vai direto para "O que deseja fazer?"
+                        val intent = if (commercialProfile != null) {
                             Intent(context, WhatToDoActivity::class.java)
                         } else {
-                            // Se não tem, vai para a criação do perfil
                             Intent(context, CreateCommercialProfileActivity::class.java)
                         }
                         context.startActivity(intent)
