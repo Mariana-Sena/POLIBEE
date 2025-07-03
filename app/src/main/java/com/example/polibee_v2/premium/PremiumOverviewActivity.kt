@@ -70,7 +70,7 @@ class PremiumOverviewActivity : ComponentActivity() {
 @Composable
 fun PremiumOverviewScreen(
     onBackClick: () -> Unit,
-    onSelectPlan: (String) -> Unit, // Callback para quando um plano é selecionado ou "Seja Premium" clicado
+    onSelectPlan: (String) -> Unit,
     onBottomNavItemClick: (Int) -> Unit
 ) {
     var selectedBottomNavItem by remember { mutableStateOf(-1) }
@@ -81,7 +81,7 @@ fun PremiumOverviewScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp) // Altura expandida para abrigar a logo e os cards de preço
+                    .height(300.dp)
                     .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
                     .background(PolibeeDarkGreen)
             ) {
@@ -131,26 +131,32 @@ fun PremiumOverviewScreen(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // Seção de Preços (Cards Mensal e Anual)
+                    // <<<<<<< INÍCIO DA ALTERAÇÃO >>>>>>>
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 15.dp), // Padding lateral para os cards
-                        horizontalArrangement = Arrangement.SpaceAround,
+                            .padding(horizontal = 16.dp), // Padding lateral para os cards
+                        horizontalArrangement = Arrangement.spacedBy(16.dp), // Espaçamento consistente
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Card Mensal
-                        PremiumPlanCard(
-                            planType = "Mensal",
-                            price = "R$ 34,90",
-                            isAnnual = false,
-                            onClick = { onSelectPlan("Mensal") }
-                        )
+                        // Box para o Card Mensal para poder aplicar o peso
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.weight(1f) // Garante que o Box ocupe seu espaço
+                        ) {
+                            PremiumPlanCard(
+                                planType = "Mensal",
+                                price = "R$ 34,90",
+                                isAnnual = false,
+                                onClick = { onSelectPlan("Mensal") }
+                            )
+                        }
 
-                        // Card Anual com Badge "MELHOR PREÇO" acima dele
+
+                        // Box para o Card Anual com Badge "MELHOR PREÇO"
                         Box(
                             contentAlignment = Alignment.TopCenter,
-                            modifier = Modifier.weight(1f) // Garante que o Box ocupe seu espaço na Row
+                            modifier = Modifier.weight(1f) // Garante que o Box ocupe seu espaço
                         ) {
                             Box(
                                 modifier = Modifier
@@ -304,29 +310,30 @@ fun PremiumOverviewScreen(
 
 @Composable
 fun PremiumPlanCard(
-    planType: String, // "Mensal" ou "Anual"
-    price: String, // "R$ 34,90"
-    totalPrice: String = "", // "R$ 320,00 no ano" (apenas para Anual)
-    isAnnual: Boolean, // Booleano para aplicar a borda laranja
-    onClick: () -> Unit
+    planType: String,
+    price: String,
+    totalPrice: String = "",
+    isAnnual: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier // Adicionado para flexibilidade, embora não usado diretamente aqui
 ) {
     Card(
-        modifier = Modifier
-            .width(160.dp) // Largura exata conforme protótipo
-            .height(180.dp) // Altura exata conforme protótipo
+        modifier = modifier
+            .width(160.dp)
+            .height(180.dp)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp), // Cantos arredondados do card
-        colors = CardDefaults.cardColors(containerColor = Color.White), // Fundo branco do card
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp), // Sombra
-        border = if (isAnnual) BorderStroke(2.dp, PolibeeOrange) else null // Borda laranja para o plano anual
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = if (isAnnual) BorderStroke(2.dp, PolibeeOrange) else null
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp), // Padding interno para o texto
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center // Centraliza o conteúdo verticalmente
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = planType,
@@ -337,11 +344,11 @@ fun PremiumPlanCard(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = price + "/Mês", // Adiciona "/Mês" ao preço
+                    text = price + "/Mês",
                     fontFamily = montserratFamily,
                     fontWeight = FontWeight.ExtraBold,
-                    fontSize = 24.sp, // Tamanho maior para o preço
-                    color = PolibeeOrange, // Cor laranja para o preço
+                    fontSize = 24.sp,
+                    color = PolibeeOrange,
                     textAlign = TextAlign.Center
                 )
                 if (totalPrice.isNotBlank()) {

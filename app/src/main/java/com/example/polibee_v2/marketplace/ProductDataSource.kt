@@ -12,17 +12,17 @@ object ProductDataSource {
             price = 125.50,
             installmentOption = "em até 10x de R$12,55 sem juros",
             description = "Fertilizante orgânico de alta performance, enriquecido com microelementos essenciais para otimizar a polinização assistida e a saúde das abelhas. Aumenta a produção de frutos e sementes.",
-            imageUrl = R.drawable.produto,
+            imageUrl = R.drawable.fert,
             isFavorite = false
         ),
         Product(
             id = "prod002",
-            name = "Kit de Ferramentas para Apicultura",
+            name = "Macacão Apicultura",
             companyName = "Apicultura Moderna",
             price = 350.00,
             installmentOption = "em até 10x de R$35,00 sem juros",
-            description = "Conjunto completo de ferramentas para apicultores iniciantes e experientes, incluindo fumigador, raspador de mel, luvas e véu de proteção. Essencial para o manejo seguro e eficiente das colmeias.",
-            imageUrl = R.drawable.produto,
+            description = "Macacão de Apicultura completo, com luvas, véu e ferramentas essenciais. Confeccionado em tecido resistente e respirável, ideal para proteção durante o manejo das colmeias.",
+            imageUrl = R.drawable.macacao,
             isFavorite = false
         ),
         Product(
